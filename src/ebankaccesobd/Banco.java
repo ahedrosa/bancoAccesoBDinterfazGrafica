@@ -133,7 +133,7 @@ public class Banco implements Serializable{
       ArrayList <TarjetaCredito> arrayListTarjetasCredito= new ArrayList();
       try{
           PreparedStatement consulta = con.prepareStatement("SELECT numTar, pin, saldo"
-                 + ", bloqueada, dniTitular FROM " + nomTablaTarjetas + " ORDER BY numTar");
+                 + ", dniTitular FROM " + nomTablaTarjetas + " ORDER BY numTar");
          ResultSet resultado = consulta.executeQuery();
          
          while(resultado.next()){
@@ -144,7 +144,7 @@ public class Banco implements Serializable{
       }catch(SQLException ex){
          throw new SQLException(ex);
       }
-      return arrayListTarjetaCreditos;
+      return arrayListTarjetasCredito;
    }   
     
     
