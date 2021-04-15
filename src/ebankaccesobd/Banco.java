@@ -16,7 +16,9 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -102,22 +104,48 @@ public class Banco implements Serializable{
         PreparedStatement consulta;
         
         consulta = con.prepareStatement("DELETE FROM " +nomTablaTarjetas+ " WHERE "
-                + " numTarjeta = (?)");
+                + " numTar = (?)");
         consulta.setString(1, numTar);
         consulta.execute();
         
         
     }
     
-    public void modificacion(int posTar, Double saldo,String PIN, Boolean bloq ){
+    public void modificacion(String numTar, Double saldo,String PIN, Boolean bloq ) throws SQLException{
+        String sSaldo, sBloq;
         
-        tTarjetas[posTar].setSaldo(saldo);
-        tTarjetas[posTar].setPin(PIN);
-        tTarjetas[posTar].setBloqueada(bloq);
+        sSaldo = String.valueOf(saldo);
+        sBloq = booleanToSQL(bloq);
+        
+        PreparedStatement consulta;
+        
+        consulta = con.prepareStatement("UPDATE "+nomTablaTarjetas+" SET pin = ? ,"
+                + " saldo = ? , bloqueada = ? WHERE numTar = ? ");
+        consulta.setString(1, PIN);
+        consulta.setString(1, sSaldo);
+        consulta.setString(1, sBloq);
+        consulta.setString(1, numTar);
+        consulta.execute();
+        
     }
     
-    
-    
+    public ArrayList <TarjetaCredito> recuperarTodas() throws SQLException{
+      ArrayList <TarjetaCredito> arrayListTarjetasCredito= new ArrayList();
+      try{
+          PreparedStatement consulta = con.prepareStatement("SELECT numTar, pin, saldo"
+                 + ", bloqueada, dniTitular FROM " + nomTablaTarjetas + " ORDER BY numTar");
+         ResultSet resultado = consulta.executeQuery();
+         
+         while(resultado.next()){
+            arrayListTarjetasCredito.add(new TarjetaCredito(resultado.getString("numTar"),
+                    resultado.getString("pin"), Double.parseDouble(resultado.getString("saldo")),
+                    resultado.getString("dniTitular")));
+         }
+      }catch(SQLException ex){
+         throw new SQLException(ex);
+      }
+      return arrayListTarjetaCreditos;
+   }   
     
     
     @Override
@@ -137,18 +165,7 @@ public class Banco implements Serializable{
         return cad;
     }
     
-    public int buscaPosicion(String numTarjeta){
-        // Busca la posición de numTarjeta en el array tTarjetas,
-        // si no está devuelve -1
-        
-        for (int i = 0; i < tTarjetas.length; ++i){
-            if (numTarjeta.compareTo(tTarjetas[i].getNumTarjeta()) == 0){
-                return i;
-            }
-        }
-        
-        return -1;
-    }
+    
     
     
     
