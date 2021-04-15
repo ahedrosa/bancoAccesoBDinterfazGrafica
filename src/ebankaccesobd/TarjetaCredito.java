@@ -27,11 +27,12 @@ public class TarjetaCredito implements Serializable{
         saldo = 0.0;
     }
     
-    public TarjetaCredito(String numTarjeta, String pin, double saldo){
+    public TarjetaCredito(String numTarjeta, String pin, double saldo, String dniTitular){
         this.numTarjeta = numTarjeta;
         this.pin = pin;
         this.bloqueada = false;
         this.saldo = saldo;
+        this.dniTitular = dniTitular;
         
     }
 
