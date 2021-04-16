@@ -5,28 +5,18 @@
  */
 package ebankaccesobd;
 
-import com.mysql.cj.jdbc.PreparedStatementWrapper;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author Alberto
  */
-public class Banco implements Serializable{
+public class Banco{
     
     // Constante publicas de clase
     public final static int LIMITE_REINTEGRO = 600;
@@ -39,7 +29,7 @@ public class Banco implements Serializable{
     
 //    private TarjetaCredito[] tTarjetas;
 
-    public Banco(String nomBD, String nomTablaCli, String nomTablaTar, Connection con) throws SQLException, ClassNotFoundException {
+    public Banco(String nomBD, String nomTablaCli, String nomTablaTar) throws SQLException, ClassNotFoundException {
         this.nomBD = nomBD;
         nomTablaClientes = nomTablaCli;
         nomTablaTarjetas = nomTablaTar;
@@ -129,18 +119,18 @@ public class Banco implements Serializable{
         
     }
     
-    public ArrayList <TarjetaCredito> recuperarTodas() throws SQLException{
+    public ArrayList <TarjetaCredito> recuperarTodasCuentas() throws SQLException{
       ArrayList <TarjetaCredito> arrayListTarjetasCredito= new ArrayList();
       try{
-          PreparedStatement consulta = con.prepareStatement("SELECT numTar, pin, saldo"
-                 + ", dniTitular FROM " + nomTablaTarjetas + " ORDER BY numTar");
-         ResultSet resultado = consulta.executeQuery();
+        PreparedStatement consulta = con.prepareStatement("SELECT numTar, pin, saldo"
+                + ", dniTitular FROM " + nomTablaTarjetas + " ORDER BY numTar");
+        ResultSet resultado = consulta.executeQuery();
          
-         while(resultado.next()){
+        while(resultado.next()){
             arrayListTarjetasCredito.add(new TarjetaCredito(resultado.getString("numTar"),
                     resultado.getString("pin"), Double.parseDouble(resultado.getString("saldo")),
                     resultado.getString("dniTitular")));
-         }
+        }
       }catch(SQLException ex){
          throw new SQLException(ex);
       }
@@ -148,16 +138,88 @@ public class Banco implements Serializable{
    }   
     
     
-    @Override
-    public String toString(){
+    
+
+    public ArrayList<String[]> obtenerCliDNInom() throws SQLException{
+        
+        String[] cliente = new String[2];
+        ArrayList<String[]> tabla = new ArrayList<>();
+        
+        PreparedStatement consulta = con.prepareStatement("SELECT DNI, nombre FROM "+nomTablaClientes+" "
+                + " ORDER BY nombre ;");
+        ResultSet resultado = consulta.executeQuery();
+        
+        while (resultado.next()) {
+            cliente[0] = resultado.getString("DNI");
+            cliente[1] = resultado.getString("nombre");
+            tabla.add(cliente);            
+        }
+                
+        return tabla;
+    }
+    
+    public ArrayList<String> obtenerCuentasPorCliente(String dniCli) throws SQLException{
+        ArrayList<String> cuentas = new ArrayList<>();
+        
+        PreparedStatement consulta = con.prepareStatement("SELECT numTar FROM "+nomTablaTarjetas
+                + " WHERE dniTitular = ?;" );
+            consulta.setString(1, dniCli);
+        ResultSet resultado = consulta.executeQuery();
+        
+        while (resultado.next()) {
+            cuentas.add(resultado.getString("numTar"));            
+        }
+                
+        return cuentas;
+    }
+    
+    
+    
+    public String listadoCliCuentas() throws SQLException{
         boolean hayCuentas = false;
-        String cad =  "Banco\n";
-               cad += "-----\n";
-               for (int i = 0; i < tTarjetas.length; ++i){
-                   if (tTarjetas[i].getNumTarjeta().length() != 0){
-                       cad += tTarjetas[i] + "\n";
-                       hayCuentas = true;
-                   }
+        boolean tieneCuentas = false;
+        String cad =  "Listado de Clientes con sus respectivas cuentas en eBanco\n";
+               cad += "------------------------------------------------------------------------\n";
+               
+        ArrayList <String[]> cliente = obtenerCliDNInom();
+        if (!cliente.isEmpty()) {
+                    
+            for (int i = 0; i < cliente.size(); ++i){
+
+            cad += "Cliente: \n\n";
+            cad += "DNI:\t"+ cliente.get(i)[0]+ "\n";
+            cad += "Nombre:\t"+ cliente.get(i)[1]+ "\n";
+            cad += "Cuentas asociadas a este Cliente:\n\n";
+            ArrayList<String> cuentas = obtenerCuentasPorCliente(cliente.get(i)[0]);
+                if (!cuentas.isEmpty()){
+                    for (int j = 0; j < cuentas.size(); j++) {
+                        cad +="\t"+ (j+1) + ". " +cuentas.get(j)+"\n";
+                    }
+                    
+                }else{
+                    cad += "Este Cliente no tiene asociada ninguna cuenta \n";
+                }
+            cad += "------------------------------------------------------------------\n";
+            
+            }
+        }else{
+            cad += "Banco sin cuentas\n";
+        }
+        return cad;
+    }
+    
+    public String listadoCuentas() throws SQLException{
+        boolean hayCuentas = false;
+        String cad =  "Listado de cuentas en Banco\n";
+               cad += "------------------------------\n";
+               
+        ArrayList <TarjetaCredito> listado = recuperarTodasCuentas();
+               for (int i = 0; i < listado.size(); ++i){
+                   
+                cad += (listado.get(i).getNumTarjeta()+"\n");
+                cad += "------------------------------\n";
+                hayCuentas = true;
+                  
                }
         if (!hayCuentas){
             cad += "Banco sin cuentas\n";
