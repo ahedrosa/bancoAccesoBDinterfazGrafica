@@ -7,6 +7,7 @@ package ebankaccesobd;
 
 import java.awt.Color;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -445,7 +446,7 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
                    + " de estar compuesto unicamente por 16 números");
         }else 
             try {
-                if(eBanco.buscaNtarjeta(jTextFieldNtarjeta.getText())!="null"){
+                if(eBanco.buscaNtarjeta(jTextFieldNtarjeta.getText()).compareTo("null")==0){
                     javax.swing.JOptionPane.showMessageDialog(this,"Error este número de tarjeta ya existe");
                 }else{
                     jTextFieldNtarjeta.setBackground(Color.green);
@@ -587,16 +588,14 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void jButtonCajeroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCajeroActionPerformed
-         boolean hayCuentas = false;
-         
-        for (int i = 0; i < eBanco.gettTarjetas().length; ++i){
-                if (eBanco.gettTarjetas()[i].getNumTarjeta().length() != 0){
-                    hayCuentas = true;
-                    i = eBanco.gettTarjetas().length;
-                }
-        }
-                
-        if (!hayCuentas) {
+        ArrayList<ClienteAux> clientes = null;
+        try {
+            clientes = eBanco.obtenerCliDNInom();
+        } catch (SQLException ex) {
+            Logger.getLogger(BancoConIgSerializado.class.getName()).log(Level.SEVERE, null, ex);
+        }            
+        
+        if (clientes.isEmpty()) {
             javax.swing.JOptionPane.showMessageDialog(this,"Lo sentimos, no hay ninguna cuenta dada de alta. Pruebe a crear una para después acceder a sus operaciones"); 
         }else{
             CajeroLogInJDialog cajero = new CajeroLogInJDialog(this, "Log In Cajero", eBanco);
