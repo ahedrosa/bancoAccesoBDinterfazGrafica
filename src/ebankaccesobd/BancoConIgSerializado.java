@@ -70,6 +70,8 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        jTextFieldDNI = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
         jLabelNombreBanco = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextPaneSituacionBanco = new javax.swing.JTextPane();
@@ -77,6 +79,11 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
         jButtonBaja = new javax.swing.JButton();
         jButtonModificar = new javax.swing.JButton();
         jButtonCajero = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jButtonAltaCli = new javax.swing.JButton();
+        jButtonModificarCliente = new javax.swing.JButton();
+        jButtonBajaCliente = new javax.swing.JButton();
 
         AltajFrame.setMaximizedBounds(new java.awt.Rectangle(0, 0, 400, 400));
         AltajFrame.setMinimumSize(new java.awt.Dimension(400, 400));
@@ -155,6 +162,21 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
 
         jLabel6.setText("Desplazar entre campos usando TAB");
 
+        jTextFieldDNI.setFont(new java.awt.Font("Tahoma", 2, 12)); // NOI18N
+        jTextFieldDNI.setText("Introduzca el DNI de un cliente");
+        jTextFieldDNI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldDNIActionPerformed(evt);
+            }
+        });
+        jTextFieldDNI.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextFieldDNIKeyPressed(evt);
+            }
+        });
+
+        jLabel9.setText("DNI");
+
         javax.swing.GroupLayout AltajFrameLayout = new javax.swing.GroupLayout(AltajFrame.getContentPane());
         AltajFrame.getContentPane().setLayout(AltajFrameLayout);
         AltajFrameLayout.setHorizontalGroup(
@@ -174,17 +196,20 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
                                 .addComponent(jLabel6)
                                 .addComponent(jLabel5))
                             .addGroup(AltajFrameLayout.createSequentialGroup()
-                                .addGroup(AltajFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel3))
+                                .addGroup(AltajFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(AltajFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel1)
+                                        .addComponent(jLabel2)
+                                        .addComponent(jLabel3))
+                                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING))
                                 .addGap(18, 18, 18)
                                 .addGroup(AltajFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jButtonAceptarAlta)
                                     .addGroup(AltajFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(jTextFieldPIN)
                                         .addComponent(jTextFieldSaldo, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
-                                        .addComponent(jTextFieldNtarjeta)))))))
+                                        .addComponent(jTextFieldNtarjeta)
+                                        .addComponent(jTextFieldDNI, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)))))))
                 .addContainerGap(115, Short.MAX_VALUE))
         );
         AltajFrameLayout.setVerticalGroup(
@@ -208,7 +233,11 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
                 .addGroup(AltajFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
                     .addComponent(jTextFieldSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(72, 72, 72)
+                .addGap(18, 18, 18)
+                .addGroup(AltajFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldDNI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
+                .addGap(33, 33, 33)
                 .addGroup(AltajFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonAceptarAlta)
                     .addComponent(jButtonBorrarAlta))
@@ -266,46 +295,92 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
             }
         });
 
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel7.setText("Cuentas Bancarias");
+
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel8.setText("Clientes");
+
+        jButtonAltaCli.setText("Alta");
+        jButtonAltaCli.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAltaCliActionPerformed(evt);
+            }
+        });
+
+        jButtonModificarCliente.setText("Modificar");
+        jButtonModificarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonModificarClienteActionPerformed(evt);
+            }
+        });
+
+        jButtonBajaCliente.setText("Baja");
+        jButtonBajaCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonBajaClienteActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(279, 279, 279)
-                .addComponent(jLabelNombreBanco, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(44, 44, 44)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 650, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButtonAltaCli, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButtonModificarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButtonBajaCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(79, 79, 79)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButtonAlta, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButtonBaja, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButtonModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(139, 139, 139)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButtonCajero, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButtonAlta, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(65, 65, 65)
-                                .addComponent(jButtonBaja, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(56, 56, 56)
-                                .addComponent(jButtonModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(56, Short.MAX_VALUE))
+                        .addGap(279, 279, 279)
+                        .addComponent(jLabelNombreBanco, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(180, 180, 180)
+                        .addComponent(jButtonCajero, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabelNombreBanco)
-                .addGap(51, 51, 51)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonBaja, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonAlta, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(33, 33, 33)
-                .addComponent(jButtonCajero, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(jLabel7)
+                        .addGap(60, 60, 60)
+                        .addComponent(jButtonAlta, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonBaja, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addComponent(jLabel8)
+                        .addGap(53, 53, 53)
+                        .addComponent(jButtonAltaCli, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonModificarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonBajaCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButtonCajero, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(13, Short.MAX_VALUE))
         );
 
         pack();
@@ -341,7 +416,7 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
 
     private void jButtonAceptarAltaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAceptarAltaActionPerformed
         // TODO add your handling code here:
-        String nTarj, PIN;
+        String nTarj, PIN, dniCli;
         Double saldoTarj;
         if (jTextFieldNtarjeta.getBackground()!= Color.green || jTextFieldPIN.getBackground() != Color.green || jTextFieldSaldo.getBackground() != Color.green) {
             javax.swing.JOptionPane.showMessageDialog(this,"Error, al menos uno de los campos introducidos es erróneo, RECUERDE VALIDARLOS pulsando "
@@ -350,9 +425,9 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
             nTarj = jTextFieldNtarjeta.getText();
             PIN = jTextFieldPIN.getText();
             saldoTarj = Double.parseDouble(jTextFieldSaldo.getText());
+            dniCli = ;
+            TarjetaCredito tarjetaNueva = new TarjetaCredito(nTarj, PIN, saldoTarj, nTarj);
             eBanco.alta(nTarj, PIN, saldoTarj);
-            jTextPaneSituacionBanco.setText(eBanco.toString());
-            eBanco.guardar(NOMBREFICHERO);
             jButtonAceptarAlta.setVisible(false);
         }
         
@@ -456,28 +531,34 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
         jTextFieldSaldo.setFont(new java.awt.Font("Tahoma", 0, 12));
         jTextFieldSaldo.setEditable(true);
         
+        jTextFieldDNI.setText("Introduzca el DNI de un cliente");
+        jTextFieldDNI.setBackground(Color.white);
+        jTextFieldDNI.setFont(new java.awt.Font("Tahoma", 0, 12));
+        
+        
         jButtonAceptarAlta.setVisible(true);
     }//GEN-LAST:event_jButtonBorrarAltaActionPerformed
 
     private void AltajFrameWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_AltajFrameWindowClosing
         // TODO add your handling code here:
-        jTextFieldNtarjeta.setText("Número de Tarjeta(16 Dígitos)");
-        jTextFieldNtarjeta.setBackground(Color.white);
-        jTextFieldNtarjeta.setFont(new java.awt.Font("Tahoma", 0, 12));
-        jTextFieldNtarjeta.setEditable(true);
-        
-        
-        jTextFieldPIN.setText("Introduzca un PIN válido");
-        jTextFieldPIN.setBackground(Color.white);
-        jTextFieldPIN.setFont(new java.awt.Font("Tahoma", 0, 12));
-        jTextFieldPIN.setEditable(true);
-        
-        jTextFieldSaldo.setText("Introduzca su saldo inicial en €");
-        jTextFieldSaldo.setBackground(Color.white);
-        jTextFieldSaldo.setFont(new java.awt.Font("Tahoma", 0, 12));
-        jTextFieldSaldo.setEditable(true);
-        
-        jButtonAceptarAlta.setVisible(true);
+        dispose();
+//        jTextFieldNtarjeta.setText("Número de Tarjeta(16 Dígitos)");
+//        jTextFieldNtarjeta.setBackground(Color.white);
+//        jTextFieldNtarjeta.setFont(new java.awt.Font("Tahoma", 0, 12));
+//        jTextFieldNtarjeta.setEditable(true);
+//        
+//        
+//        jTextFieldPIN.setText("Introduzca un PIN válido");
+//        jTextFieldPIN.setBackground(Color.white);
+//        jTextFieldPIN.setFont(new java.awt.Font("Tahoma", 0, 12));
+//        jTextFieldPIN.setEditable(true);
+//        
+//        jTextFieldSaldo.setText("Introduzca su saldo inicial en €");
+//        jTextFieldSaldo.setBackground(Color.white);
+//        jTextFieldSaldo.setFont(new java.awt.Font("Tahoma", 0, 12));
+//        jTextFieldSaldo.setEditable(true);
+//        
+//        jButtonAceptarAlta.setVisible(true);
     }//GEN-LAST:event_AltajFrameWindowClosing
 
     private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
@@ -516,6 +597,40 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_jButtonCajeroActionPerformed
+
+    private void jButtonAltaCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAltaCliActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonAltaCliActionPerformed
+
+    private void jButtonModificarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarClienteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonModificarClienteActionPerformed
+
+    private void jButtonBajaClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBajaClienteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonBajaClienteActionPerformed
+
+    private void jTextFieldDNIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldDNIActionPerformed
+        try {
+            // TODO add your handling code here:
+            if (eBanco.buscaDNICliente(jTextFieldDNI.getText()).compareTo("null")==0) {
+                javax.swing.JOptionPane.showMessageDialog(null, "Error, ese DNI no está"
+                        + " dado de alta para ningun cliente");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BancoConIgSerializado.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_jTextFieldDNIActionPerformed
+
+    private void jTextFieldDNIKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDNIKeyPressed
+        
+        if (this.jTextFieldDNI.getText().compareTo("Introduzca el DNI de un cliente") == 0){
+            this.jTextFieldDNI.setText("");
+            jTextFieldDNI.setBackground(Color.red);
+            jTextFieldDNI.setFont(new java.awt.Font("Tahoma", 0, 12));
+        }
+    }//GEN-LAST:event_jTextFieldDNIKeyPressed
 
     /**
      * @param args the command line arguments
@@ -567,18 +682,25 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
     private javax.swing.JFrame AltajFrame;
     private javax.swing.JButton jButtonAceptarAlta;
     private javax.swing.JButton jButtonAlta;
+    private javax.swing.JButton jButtonAltaCli;
     private javax.swing.JButton jButtonBaja;
+    private javax.swing.JButton jButtonBajaCliente;
     private javax.swing.JButton jButtonBorrarAlta;
     private javax.swing.JButton jButtonCajero;
     private javax.swing.JButton jButtonModificar;
+    private javax.swing.JButton jButtonModificarCliente;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabelNombreBanco;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField jTextFieldDNI;
     private javax.swing.JTextField jTextFieldNtarjeta;
     private javax.swing.JTextField jTextFieldPIN;
     private javax.swing.JTextField jTextFieldSaldo;
