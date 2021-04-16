@@ -140,19 +140,20 @@ public class Banco{
     
     
 
-    public ArrayList<String[]> obtenerCliDNInom() throws SQLException{
+    public ArrayList<ClienteAux> obtenerCliDNInom() throws SQLException{
         
-        String[] cliente = new String[2];
-        ArrayList<String[]> tabla = new ArrayList<>();
+//        String[] cliente = new String[2];
+        String nom, dni;
+        ArrayList<ClienteAux> tabla = new ArrayList<>();
         
         PreparedStatement consulta = con.prepareStatement("SELECT DNI, nombre FROM "+nomTablaClientes+" "
                 + " ORDER BY nombre ;");
         ResultSet resultado = consulta.executeQuery();
         
         while (resultado.next()) {
-            cliente[0] = resultado.getString("DNI");
-            cliente[1] = resultado.getString("nombre");
-            tabla.add(cliente);            
+            dni = resultado.getString("DNI");
+            nom = resultado.getString("nombre");
+            tabla.add(new ClienteAux(dni, nom));            
         }
                 
         return tabla;
@@ -176,21 +177,20 @@ public class Banco{
     
     
     public String listadoCliCuentas() throws SQLException{
-        boolean hayCuentas = false;
-        boolean tieneCuentas = false;
+        
         String cad =  "Listado de Clientes con sus respectivas cuentas en eBanco\n";
-               cad += "------------------------------------------------------------------------\n";
+               cad += "---------------------------------------------------------------------------------\n";
                
-        ArrayList <String[]> cliente = obtenerCliDNInom();
+        ArrayList <ClienteAux> cliente = obtenerCliDNInom();
         if (!cliente.isEmpty()) {
                     
             for (int i = 0; i < cliente.size(); ++i){
 
             cad += "Cliente: \n\n";
-            cad += "DNI:\t"+ cliente.get(i)[0]+ "\n";
-            cad += "Nombre:\t"+ cliente.get(i)[1]+ "\n";
+            cad += "DNI:\t"+ cliente.get(i).getDni()+ "\n";
+            cad += "Nombre:\t"+ cliente.get(i).getNombre() +"\n";
             cad += "Cuentas asociadas a este Cliente:\n\n";
-            ArrayList<String> cuentas = obtenerCuentasPorCliente(cliente.get(i)[0]);
+            ArrayList<String> cuentas = obtenerCuentasPorCliente(cliente.get(i).getDni());
                 if (!cuentas.isEmpty()){
                     for (int j = 0; j < cuentas.size(); j++) {
                         cad +="\t"+ (j+1) + ". " +cuentas.get(j)+"\n";
@@ -199,7 +199,7 @@ public class Banco{
                 }else{
                     cad += "Este Cliente no tiene asociada ninguna cuenta \n";
                 }
-            cad += "------------------------------------------------------------------\n";
+            cad += "-----------------------------------------------------------------------\n";
             
             }
         }else{
