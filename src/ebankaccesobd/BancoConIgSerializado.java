@@ -6,8 +6,10 @@
 package ebankaccesobd;
 
 import java.awt.Color;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
-import javax.swing.JTextPane;
 
 /**
  *
@@ -18,7 +20,9 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
     /**
      * Creates new form BancoConIgSerializado
      */
-    public final static String NOMBREFICHERO = "eBanco.objeto";
+    private String nomBD;
+    private String nomTablaClientes;
+    private String nomTablaTarjetas;
     private Banco eBanco;
     
     //megustaria llamar al Objeto del tipo BancoConIgSerializado que se crea automaticamente 
@@ -27,18 +31,18 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
     
     //Yo actualizo la posicion del banco cuando el frame principal gana el foco. Pero en ningún momento enlazo este eBanco 
     //con el que uso en el resto de clases, más que guardarlo. Pero yo nunca lo cargo mas que al inicio del programa
-    public BancoConIgSerializado() {
+    public BancoConIgSerializado() throws SQLException, ClassNotFoundException {
         initComponents();                
         
-        int numTarjetas = 1000;
+        nomBD = "Banco";
+        nomTablaTarjetas = "tarjeta_credito";
+        nomTablaClientes = "cliente";
         
-        eBanco = new Banco(numTarjetas);
+        eBanco = new Banco(nomBD, nomTablaClientes, nomTablaTarjetas);
         
-        if (eBanco.existe(NOMBREFICHERO)) {
-            eBanco.cargar(NOMBREFICHERO);
-        }
         
-        jTextPaneSituacionBanco.setText(eBanco.toString());
+        
+        jTextPaneSituacionBanco.setText(eBanco.listadoCliCuentas());
     }
 
     public Banco geteBanco() {
@@ -477,13 +481,21 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
     }//GEN-LAST:event_AltajFrameWindowClosing
 
     private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
-        // TODO add your handling code here:
-        jTextPaneSituacionBanco.setText(eBanco.toString());
+        try {
+            // TODO add your handling code here:
+            jTextPaneSituacionBanco.setText(eBanco.listadoCliCuentas());
+        } catch (SQLException ex) {
+            Logger.getLogger(BancoConIgSerializado.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_formWindowGainedFocus
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        // TODO add your handling code here:
-        eBanco.guardar(NOMBREFICHERO);
+        try {
+            // TODO add your handling code here:
+            eBanco.cerrar();
+        } catch (SQLException ex) {
+            Logger.getLogger(BancoConIgSerializado.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_formWindowClosing
 
     private void jButtonCajeroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCajeroActionPerformed
@@ -540,7 +552,13 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new BancoConIgSerializado().setVisible(true);
+                try {
+                    new BancoConIgSerializado().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(BancoConIgSerializado.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(BancoConIgSerializado.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });        
     }
