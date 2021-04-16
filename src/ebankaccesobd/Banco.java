@@ -119,6 +119,27 @@ public class Banco{
         
     }
     
+    public String buscaDNICliente(String dni) throws SQLException{
+        PreparedStatement consulta = con.prepareStatement("SELECT DNI FROM "+nomTablaClientes+
+                " WHERE DNI = ?");
+        consulta.setString(1, dni);
+        ResultSet resulado = consulta.executeQuery();
+        dni = resulado.getString(1);
+        return dni;
+    }
+    
+    public String buscaNtarjeta(String nTar) throws SQLException{
+        PreparedStatement consulta = con.prepareStatement("SELECT numTar FROM "+nomTablaTarjetas+
+                " WHERE numTar = ?");
+        consulta.setString(1, nTar);
+        ResultSet resulado = consulta.executeQuery();
+        nTar = resulado.getString(1);
+        return nTar;
+    }
+    
+    
+    
+    
     public ArrayList <TarjetaCredito> recuperarTodasCuentas() throws SQLException{
       ArrayList <TarjetaCredito> arrayListTarjetasCredito= new ArrayList();
       try{

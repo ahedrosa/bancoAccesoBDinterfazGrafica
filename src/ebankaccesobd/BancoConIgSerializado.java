@@ -390,11 +390,8 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
         // TODO add your handling code here:        
         AltajFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         
-        if (eBanco.buscaPosLibre()== -1) {
-            javax.swing.JOptionPane.showMessageDialog(this,"Lo sentimos, no se puede dar de alta, banco completo"); 
-        }else{
-            AltajFrame.setVisible(true);
-        }
+        AltajFrame.setVisible(true);
+       
         
     }//GEN-LAST:event_jButtonAltaActionPerformed
 
@@ -418,17 +415,22 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
         // TODO add your handling code here:
         String nTarj, PIN, dniCli;
         Double saldoTarj;
-        if (jTextFieldNtarjeta.getBackground()!= Color.green || jTextFieldPIN.getBackground() != Color.green || jTextFieldSaldo.getBackground() != Color.green) {
+        if (jTextFieldNtarjeta.getBackground()!= Color.green || jTextFieldPIN.getBackground() != Color.green || jTextFieldSaldo.getBackground() != Color.green || jTextFieldDNI.getBackground() != Color.green) {
             javax.swing.JOptionPane.showMessageDialog(this,"Error, al menos uno de los campos introducidos es erróneo, RECUERDE VALIDARLOS pulsando "
                                                         + "\"enter\", y revisar aquellos que queden de color rojo");
         }else{
             nTarj = jTextFieldNtarjeta.getText();
             PIN = jTextFieldPIN.getText();
             saldoTarj = Double.parseDouble(jTextFieldSaldo.getText());
-            dniCli = ;
-            TarjetaCredito tarjetaNueva = new TarjetaCredito(nTarj, PIN, saldoTarj, nTarj);
-            eBanco.alta(nTarj, PIN, saldoTarj);
-            jButtonAceptarAlta.setVisible(false);
+            dniCli = jTextFieldDNI.getText();
+            TarjetaCredito tarjetaNueva = new TarjetaCredito(nTarj, PIN, saldoTarj, dniCli);
+            try {
+                eBanco.alta(tarjetaNueva);
+                javax.swing.JOptionPane.showMessageDialog(null, "Se ha agregado la tarjeta satisfactoriamente");
+            } catch (SQLException ex) {
+                Logger.getLogger(BancoConIgSerializado.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            dispose();
         }
         
         
@@ -439,14 +441,19 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
         // TODO add your handling code here:
         
         if(!TarjetaCredito.esNumTarjetaValido(jTextFieldNtarjeta.getText())){
-           javax.swing.JOptionPane.showMessageDialog(this,"Error el Número de la tarjeta debe de estar compuesto unicamente por 16 números");
+           javax.swing.JOptionPane.showMessageDialog(this,"Error el Número de la tarjeta debe"
+                   + " de estar compuesto unicamente por 16 números");
         }else 
-            if(eBanco.buscaPosicion(jTextFieldNtarjeta.getText())!=-1){
-                javax.swing.JOptionPane.showMessageDialog(this,"Error este número de tarjeta ya existe");
-            }else{
+            try {
+                if(eBanco.buscaNtarjeta(jTextFieldNtarjeta.getText())!="null"){
+                    javax.swing.JOptionPane.showMessageDialog(this,"Error este número de tarjeta ya existe");
+                }else{
                     jTextFieldNtarjeta.setBackground(Color.green);
                     jTextFieldNtarjeta.setEditable(false);
-            }     
+                }
+        } catch (SQLException ex) {
+            Logger.getLogger(BancoConIgSerializado.class.getName()).log(Level.SEVERE, null, ex);
+        }     
         
         
     }//GEN-LAST:event_jTextFieldNtarjetaActionPerformed
@@ -611,12 +618,22 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonBajaClienteActionPerformed
 
     private void jTextFieldDNIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldDNIActionPerformed
+        String dni = jTextFieldDNI.getText();
+                
         try {
-            // TODO add your handling code here:
-            if (eBanco.buscaDNICliente(jTextFieldDNI.getText()).compareTo("null")==0) {
-                javax.swing.JOptionPane.showMessageDialog(null, "Error, ese DNI no está"
-                        + " dado de alta para ningun cliente");
-            }
+            if(dni.length()== 0){
+                javax.swing.JOptionPane.showMessageDialog(null, "Error, el campo DNI está vacío");
+            }else if (!FuncionesSobreCaracteres.esDNIValido(dni)) {
+                javax.swing.JOptionPane.showMessageDialog(null, "Error, el DNI no es válido"
+                        + " tiene que cuplir con el formato: xxxxxxxxA, compruebe que lo ha escrito correctamente");
+            } else if (eBanco.buscaDNICliente(dni).compareTo("null")==0) {
+                    javax.swing.JOptionPane.showMessageDialog(null, "Error, ese DNI no está"
+                            + " dado de alta para ningun cliente, prube con otro DNI, o dar este"
+                            + " de alta");
+                }else{
+                    jTextFieldDNI.setBackground(Color.green);
+                }
+                
         } catch (SQLException ex) {
             Logger.getLogger(BancoConIgSerializado.class.getName()).log(Level.SEVERE, null, ex);
         }
