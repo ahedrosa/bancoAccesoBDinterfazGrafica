@@ -89,11 +89,6 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
         AltajFrame.setMaximizedBounds(new java.awt.Rectangle(0, 0, 400, 400));
         AltajFrame.setMinimumSize(new java.awt.Dimension(400, 400));
         AltajFrame.setSize(new java.awt.Dimension(400, 400));
-        AltajFrame.addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                AltajFrameWindowClosing(evt);
-            }
-        });
 
         jButtonAceptarAlta.setText("Dar de Alta");
         jButtonAceptarAlta.addActionListener(new java.awt.event.ActionListener() {
@@ -388,7 +383,8 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonAltaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAltaActionPerformed
-        // TODO add your handling code here:        
+        // TODO add your handling code here: 
+
         AltajFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         
         AltajFrame.setVisible(true);
@@ -431,7 +427,8 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
             } catch (SQLException ex) {
                 Logger.getLogger(BancoConIgSerializado.class.getName()).log(Level.SEVERE, null, ex);
             }
-            dispose();
+            this.AltajFrame.setVisible(false);
+            reseteaAltaJFrame();
         }
         
         
@@ -446,7 +443,7 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
                    + " de estar compuesto unicamente por 16 números");
         }else 
             try {
-                if(eBanco.buscaNtarjeta(jTextFieldNtarjeta.getText()).compareTo("null")==0){
+                if(eBanco.buscaNtarjeta(jTextFieldNtarjeta.getText())!= null){
                     javax.swing.JOptionPane.showMessageDialog(this,"Error este número de tarjeta ya existe");
                 }else{
                     jTextFieldNtarjeta.setBackground(Color.green);
@@ -546,29 +543,31 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
         
         jButtonAceptarAlta.setVisible(true);
     }//GEN-LAST:event_jButtonBorrarAltaActionPerformed
-
-    private void AltajFrameWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_AltajFrameWindowClosing
-        // TODO add your handling code here:
-        dispose();
-//        jTextFieldNtarjeta.setText("Número de Tarjeta(16 Dígitos)");
-//        jTextFieldNtarjeta.setBackground(Color.white);
-//        jTextFieldNtarjeta.setFont(new java.awt.Font("Tahoma", 0, 12));
-//        jTextFieldNtarjeta.setEditable(true);
-//        
-//        
-//        jTextFieldPIN.setText("Introduzca un PIN válido");
-//        jTextFieldPIN.setBackground(Color.white);
-//        jTextFieldPIN.setFont(new java.awt.Font("Tahoma", 0, 12));
-//        jTextFieldPIN.setEditable(true);
-//        
-//        jTextFieldSaldo.setText("Introduzca su saldo inicial en €");
-//        jTextFieldSaldo.setBackground(Color.white);
-//        jTextFieldSaldo.setFont(new java.awt.Font("Tahoma", 0, 12));
-//        jTextFieldSaldo.setEditable(true);
-//        
-//        jButtonAceptarAlta.setVisible(true);
-    }//GEN-LAST:event_AltajFrameWindowClosing
-
+    
+    private void reseteaAltaJFrame(){
+        jTextFieldNtarjeta.setText("Número de Tarjeta(16 Dígitos)");
+        jTextFieldNtarjeta.setBackground(Color.white);
+        jTextFieldNtarjeta.setFont(new java.awt.Font("Tahoma", 2, 12));
+        jTextFieldNtarjeta.setEditable(true);
+        
+        
+        jTextFieldPIN.setText("Introduzca un PIN válido");
+        jTextFieldPIN.setBackground(Color.white);
+        jTextFieldPIN.setFont(new java.awt.Font("Tahoma", 2, 12));
+        jTextFieldPIN.setEditable(true);
+        
+        jTextFieldSaldo.setText("Introduzca su saldo inicial en €");
+        jTextFieldSaldo.setBackground(Color.white);
+        jTextFieldSaldo.setFont(new java.awt.Font("Tahoma", 2, 12));
+        jTextFieldSaldo.setEditable(true);
+        
+        jTextFieldDNI.setText("Introduzca el DNI de un cliente");
+        jTextFieldDNI.setBackground(Color.white);
+        jTextFieldDNI.setFont(new java.awt.Font("Tahoma", 2, 12));
+        jTextFieldDNI.setEditable(true);
+        
+    }
+    
     private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
         try {
             // TODO add your handling code here:
@@ -606,6 +605,9 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
 
     private void jButtonAltaCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAltaCliActionPerformed
         // TODO add your handling code here:
+        AltaCliente alta = new AltaCliente(null, false);
+        alta.setVisible(true);
+        
     }//GEN-LAST:event_jButtonAltaCliActionPerformed
 
     private void jButtonModificarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarClienteActionPerformed
@@ -625,7 +627,7 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
             }else if (!FuncionesSobreCaracteres.esDNIValido(dni)) {
                 javax.swing.JOptionPane.showMessageDialog(null, "Error, el DNI no es válido"
                         + " tiene que cuplir con el formato: xxxxxxxxA, compruebe que lo ha escrito correctamente");
-            } else if (eBanco.buscaDNICliente(dni).compareTo("null")==0) {
+            } else if (eBanco.buscaDNICliente(dni) == null) {
                     javax.swing.JOptionPane.showMessageDialog(null, "Error, ese DNI no está"
                             + " dado de alta para ningun cliente, prube con otro DNI, o dar este"
                             + " de alta");

@@ -42,13 +42,13 @@ public class FuncionesSobreCaracteres {
         String ndni="";
         char DNIletra, letraValidacion=' ';
         int nLetra;
-        for (int i = 0; i < (dni.length()-1); i++) {
+        for (int i = 0; i < 8; i++) {
             ndni += dni.charAt(i);
         }
         DNIletra = dni.charAt(8);
         nLetra = Integer.parseInt(ndni)%23;
         
-        switch(DNIletra){
+        switch(nLetra){
             case 0: letraValidacion = 'T';
                 break;
             case 1: letraValidacion = 'R';
