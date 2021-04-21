@@ -69,6 +69,18 @@ public class Banco{
     return vOf;
     }
     
+    public boolean sqlToBoolean(String res){
+        
+        if (res.compareTo("1")== 0){
+            return true;
+        }else if (res.compareTo("0")==0) {
+            return false;
+        }else{
+            System.out.println("Error al transformar \"bloqueada\" de sql a java");
+            return false;
+        }        
+    }
+    
     public void alta(TarjetaCredito tar) throws SQLException{
         //Desde teclado se introducen los atributos de la tarjeta validandolos
         
@@ -101,22 +113,44 @@ public class Banco{
         
     }
     
-    public void modificacion(String numTar, Double saldo,String PIN, Boolean bloq ) throws SQLException{
-        String sSaldo, sBloq;
+    public void modificacion(String numTar, String saldo,String PIN, Boolean bloq, String DNI ) throws SQLException{
+        String  sBloq;
         
-        sSaldo = String.valueOf(saldo);
+        
         sBloq = booleanToSQL(bloq);
         
         PreparedStatement consulta;
         
         consulta = con.prepareStatement("UPDATE "+nomTablaTarjetas+" SET pin = ? ,"
-                + " saldo = ? , bloqueada = ? WHERE numTar = ? ");
+                + " saldo = ? , bloqueada = ?, dniTitular = ? WHERE numTar = ? ");
         consulta.setString(1, PIN);
-        consulta.setString(1, sSaldo);
-        consulta.setString(1, sBloq);
-        consulta.setString(1, numTar);
+        consulta.setString(2, saldo);
+        consulta.setString(3, sBloq);
+        consulta.setString(4, DNI);
+        consulta.setString(5, numTar);
         consulta.execute();
         
+    }
+    
+    public TarjetaCredito devuelveTarjeta(String numTar) throws SQLException{
+        TarjetaCredito  tarjeta = null;
+        PreparedStatement consulta = con.prepareCall("SELECT * FROM "+nomTablaTarjetas+
+                " WHERE numTar = ?");
+        
+        consulta.setString(1, numTar);
+        ResultSet resultado = consulta.executeQuery();
+        
+        while (resultado.next()) {
+            tarjeta = new TarjetaCredito(
+                resultado.getString(1),
+                resultado.getString(2),
+                Double.parseDouble(resultado.getString(3)),
+                sqlToBoolean(resultado.getString(4)),
+                resultado.getString(5)
+                );            
+        }
+        
+        return tarjeta;
     }
     
     public String buscaDNICliente(String dni) throws SQLException{

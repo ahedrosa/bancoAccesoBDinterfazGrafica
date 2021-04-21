@@ -6,9 +6,10 @@
 package ebankaccesobd;
 
 import java.awt.Color;
-import java.awt.Dialog;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -21,8 +22,8 @@ public class LogInNumTarjetaJDialog extends javax.swing.JDialog {
      * Creates new form logInNumTarjetaJDialog
      */
     private Banco eBanco;
-    private int posTar;
     private boolean tipo; //Si es tipo baja, true. Si es tipo modificacion, false
+    private TarjetaCredito tarjeta = null;
     public LogInNumTarjetaJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -33,6 +34,7 @@ public class LogInNumTarjetaJDialog extends javax.swing.JDialog {
         eBanco = banco;
         initComponents();
         
+        this.setLocationRelativeTo(null);
         jButtonAceptarBaja.setVisible(false);
         jButtonAceptarModificacion.setVisible(false);
         
@@ -63,6 +65,8 @@ public class LogInNumTarjetaJDialog extends javax.swing.JDialog {
         jTextFieldSaldo = new javax.swing.JTextField();
         jTextFieldPIN = new javax.swing.JTextField();
         jLabelVerificacion = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jTextFieldDNI = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -140,6 +144,20 @@ public class LogInNumTarjetaJDialog extends javax.swing.JDialog {
 
         jLabelVerificacion.setText("Verifique los campos pulsando Enter antes de aceptar");
 
+        jLabel4.setText("DNI titular");
+
+        jTextFieldDNI.setEditable(false);
+        jTextFieldDNI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldDNIActionPerformed(evt);
+            }
+        });
+        jTextFieldDNI.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextFieldDNIKeyPressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -154,7 +172,8 @@ public class LogInNumTarjetaJDialog extends javax.swing.JDialog {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel1)
                                     .addComponent(jLabel2)
-                                    .addComponent(jLabel3))
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel4))
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addGroup(layout.createSequentialGroup()
@@ -162,7 +181,8 @@ public class LogInNumTarjetaJDialog extends javax.swing.JDialog {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jCheckBoxBloqueada))
                                     .addComponent(jTextFieldNumTarjeta, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
-                                    .addComponent(jTextFieldSaldo, javax.swing.GroupLayout.Alignment.LEADING)))
+                                    .addComponent(jTextFieldSaldo, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jTextFieldDNI, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jButtonAceptarBaja)
@@ -190,7 +210,11 @@ public class LogInNumTarjetaJDialog extends javax.swing.JDialog {
                     .addComponent(jLabel3)
                     .addComponent(jCheckBoxBloqueada)
                     .addComponent(jTextFieldPIN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextFieldDNI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                 .addComponent(jButtonAceptarModificacion)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonCancelar)
@@ -207,16 +231,19 @@ public class LogInNumTarjetaJDialog extends javax.swing.JDialog {
         if(!TarjetaCredito.esNumTarjetaValido(jTextFieldNumTarjeta.getText())){
            javax.swing.JOptionPane.showMessageDialog(this,"Error el Número de la tarjeta esta compuesto unicamente por 16 dígitos numéricos");
         }else 
-            if(eBanco.buscaPosicion(jTextFieldNumTarjeta.getText())==-1){
-                javax.swing.JOptionPane.showMessageDialog(this,"Error este número de tarjeta no existe");
-            }else{
+            try {
+                if(eBanco.buscaNtarjeta(jTextFieldNumTarjeta.getText())== null){
+                    javax.swing.JOptionPane.showMessageDialog(this,"Error este número de tarjeta no existe");
+                }else{
                     jTextFieldNumTarjeta.setBackground(Color.green);
                     jTextFieldNumTarjeta.setEditable(false);
-                    posTar = eBanco.buscaPosicion(jTextFieldNumTarjeta.getText());
                     
-                    jTextFieldPIN.setText(eBanco.gettTarjetas()[posTar].getPin());
-                    jTextFieldSaldo.setText(String.valueOf(eBanco.gettTarjetas()[posTar].getSaldo()));
-                    jCheckBoxBloqueada.setSelected(eBanco.gettTarjetas()[posTar].isBloqueada());
+                    tarjeta= eBanco.devuelveTarjeta(jTextFieldNumTarjeta.getText());
+                    
+                    jTextFieldPIN.setText(tarjeta.getPin());
+                    jTextFieldSaldo.setText(String.valueOf(tarjeta.getSaldo()));
+                    jCheckBoxBloqueada.setSelected(tarjeta.isBloqueada());
+                    jTextFieldDNI.setText(tarjeta.getDniTitular());                    
                     
                     if (tipo) {
                         jButtonAceptarBaja.setVisible(true);
@@ -224,10 +251,14 @@ public class LogInNumTarjetaJDialog extends javax.swing.JDialog {
                         jButtonAceptarModificacion.setVisible(true);
                         jTextFieldPIN.setEditable(true);
                         jTextFieldSaldo.setEditable(true);
+                        jTextFieldDNI.setEditable(true);
                         jCheckBoxBloqueada.setEnabled(true);
                         jLabelVerificacion.setVisible(true);
                     }
-            }     
+                }
+        } catch (SQLException ex) {
+            Logger.getLogger(LogInNumTarjetaJDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }     
         
         
     }//GEN-LAST:event_jTextFieldNumTarjetaActionPerformed
@@ -249,12 +280,15 @@ public class LogInNumTarjetaJDialog extends javax.swing.JDialog {
         // TODO add your handling code here:
         int res;
         
-        res = javax.swing.JOptionPane.showConfirmDialog(this,"¿Estás seguro de borrar la cuenta asociada a esta tarjeta?" , "Dar de baja", JOptionPane.OK_CANCEL_OPTION); 
+        res = javax.swing.JOptionPane.showConfirmDialog(this,"¿Está seguro de borrar la cuenta asociada a esta tarjeta?" , "Dar de baja", JOptionPane.OK_CANCEL_OPTION); 
         if (res == javax.swing.JOptionPane.OK_OPTION) {
-            eBanco.baja(posTar);
-            eBanco.guardar(BancoConIgSerializado.NOMBREFICHERO);
+            try {
+                eBanco.baja(tarjeta.getNumTarjeta());
+            } catch (SQLException ex) {
+                Logger.getLogger(LogInNumTarjetaJDialog.class.getName()).log(Level.SEVERE, null, ex);
+            }                      
             
-            
+            javax.swing.JOptionPane.showMessageDialog(this, "La cuenta ha sido borrada satisfactoriamente");
             super.dispose();
         }else{
             
@@ -269,11 +303,16 @@ public class LogInNumTarjetaJDialog extends javax.swing.JDialog {
         if (jTextFieldPIN.getBackground() != Color.green || jTextFieldSaldo.getBackground() != Color.green){        
             javax.swing.JOptionPane.showMessageDialog(this, "Error alguno de los campos a modificar no es correcto, o aún no ha sido modificado");
         }else{
-            eBanco.modificacion(posTar, 
-                                Double.parseDouble(jTextFieldSaldo.getText()),
-                                jTextFieldPIN.getText(),
-                                jCheckBoxBloqueada.isSelected());
-            eBanco.guardar(BancoConIgSerializado.NOMBREFICHERO);
+            try {
+                eBanco.modificacion(tarjeta.getNumTarjeta(),
+                        jTextFieldSaldo.getText(),
+                        jTextFieldPIN.getText(),
+                        jCheckBoxBloqueada.isSelected(),
+                        jTextFieldDNI.getText());
+            } catch (SQLException ex) {
+                Logger.getLogger(LogInNumTarjetaJDialog.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            javax.swing.JOptionPane.showMessageDialog(this, "La cuenta ha sido modificada satisfactoriamente");
             dispose();            
         }
     }//GEN-LAST:event_jButtonAceptarModificacionActionPerformed
@@ -309,14 +348,14 @@ public class LogInNumTarjetaJDialog extends javax.swing.JDialog {
 
     private void jTextFieldSaldoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldSaldoKeyPressed
         // TODO add your handling code here:
-        if (jTextFieldSaldo.getText().compareTo(String.valueOf(eBanco.gettTarjetas()[posTar].getSaldo()))==0 &&  evt.getKeyCode()!= KeyEvent.VK_ENTER && !tipo) {
+        if (jTextFieldSaldo.getText().compareTo(String.valueOf(tarjeta.getSaldo()))==0 &&  evt.getKeyCode()!= KeyEvent.VK_ENTER && !tipo) {
             jTextFieldSaldo.setText("");
         }
     }//GEN-LAST:event_jTextFieldSaldoKeyPressed
 
     private void jTextFieldPINKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldPINKeyPressed
         // TODO add your handling code here:
-        if (jTextFieldPIN.getText().compareTo(eBanco.gettTarjetas()[posTar].getPin())==0 &&  evt.getKeyCode()!= KeyEvent.VK_ENTER && !tipo){
+        if (jTextFieldPIN.getText().compareTo(tarjeta.getPin())==0 &&  evt.getKeyCode()!= KeyEvent.VK_ENTER && !tipo){
             jTextFieldPIN.setText("");
         }
     }//GEN-LAST:event_jTextFieldPINKeyPressed
@@ -326,6 +365,35 @@ public class LogInNumTarjetaJDialog extends javax.swing.JDialog {
         
         super.dispose(); 
     }//GEN-LAST:event_jButtonCancelarActionPerformed
+
+    private void jTextFieldDNIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldDNIActionPerformed
+        String dni = jTextFieldDNI.getText();
+                
+        try {
+            if(dni.length()== 0){
+                javax.swing.JOptionPane.showMessageDialog(null, "Error, el campo DNI está vacío");
+            }else if (!FuncionesSobreCaracteres.esDNIValido(dni)) {
+                javax.swing.JOptionPane.showMessageDialog(null, "Error, el DNI no es válido"
+                        + " tiene que cuplir con el formato: xxxxxxxxA, compruebe que lo ha escrito correctamente");
+            } else if (eBanco.buscaDNICliente(dni) == null) {
+                    javax.swing.JOptionPane.showMessageDialog(null, "Error, ese DNI no está"
+                            + " dado de alta para ningun cliente, prube con otro DNI, o dar este"
+                            + " de alta");
+                }else{
+                    jTextFieldDNI.setBackground(Color.green);
+                }
+                
+        } catch (SQLException ex) {
+            Logger.getLogger(BancoConIgSerializado.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jTextFieldDNIActionPerformed
+
+    private void jTextFieldDNIKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDNIKeyPressed
+        // TODO add your handling code here:
+        if (jTextFieldDNI.getText().compareTo(tarjeta.getDniTitular())==0 &&  evt.getKeyCode()!= KeyEvent.VK_ENTER && !tipo){
+            jTextFieldDNI.setText("");
+        }
+    }//GEN-LAST:event_jTextFieldDNIKeyPressed
 
     /**
      * @param args the command line arguments
@@ -380,7 +448,9 @@ public class LogInNumTarjetaJDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabelVerificacion;
+    private javax.swing.JTextField jTextFieldDNI;
     private javax.swing.JTextField jTextFieldNumTarjeta;
     private javax.swing.JTextField jTextFieldPIN;
     private javax.swing.JTextField jTextFieldSaldo;

@@ -5,13 +5,11 @@
  */
 package ebankaccesobd;
 
-import java.io.Serializable;
-
 /**
  *
  * @author Alberto
  */
-public class TarjetaCredito implements Serializable{
+public class TarjetaCredito{
     
     private String  numTarjeta;  //Se controla que se introducen 16 dígitos
     private String  pin; //Se controlan que sean 4 digitos numericos
@@ -25,6 +23,14 @@ public class TarjetaCredito implements Serializable{
         pin = "";
         bloqueada = false;
         saldo = 0.0;
+    }
+
+    public TarjetaCredito(String numTarjeta, String pin, double saldo, boolean bloqueada, String dniTitular) {
+        this.numTarjeta = numTarjeta;
+        this.pin = pin;
+        this.saldo = saldo;
+        this.bloqueada = bloqueada;
+        this.dniTitular = dniTitular;
     }
     
     public TarjetaCredito(String numTarjeta, String pin, double saldo, String dniTitular){

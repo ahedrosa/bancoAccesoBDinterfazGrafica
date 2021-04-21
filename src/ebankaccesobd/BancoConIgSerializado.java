@@ -35,6 +35,7 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
     public BancoConIgSerializado() throws SQLException, ClassNotFoundException {
         initComponents();                
         
+        this.setLocationRelativeTo(null);
         nomBD = "Banco";
         nomTablaTarjetas = "tarjeta_credito";
         nomTablaClientes = "cliente";
