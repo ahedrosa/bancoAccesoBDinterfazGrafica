@@ -5,18 +5,30 @@
  */
 package ebankaccesobd;
 
+import java.awt.Color;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
- *
  * @author LilCucumbah
  */
 public class AltaCliente extends javax.swing.JDialog {
 
-    /**
-     * Creates new form AltaCliente
-     */
+    private Cliente cliente = null;
+    private Banco eBanco = null;
+    
     public AltaCliente(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+    }
+    
+    public AltaCliente(java.awt.Frame parent, Banco banco ,boolean modal) {
+        super(parent, modal);
+        initComponents();
+        
+        this.setLocationRelativeTo(null);
+        this.eBanco = banco;
     }
 
     /**
@@ -40,11 +52,21 @@ public class AltaCliente extends javax.swing.JDialog {
         nombreJTextField = new javax.swing.JTextField();
         emailJTextField = new javax.swing.JTextField();
         telJTextField = new javax.swing.JTextField();
-        ap2TextField = new javax.swing.JTextField();
+        ap2JTextField = new javax.swing.JTextField();
         dniJTextField = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        letraJLabel11 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel1.setText("DNI");
 
@@ -60,6 +82,12 @@ public class AltaCliente extends javax.swing.JDialog {
 
         jLabel7.setText("e-mail");
 
+        ap1JTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ap1JTextFieldActionPerformed(evt);
+            }
+        });
+
         direccionJTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 direccionJTextFieldActionPerformed(evt);
@@ -72,9 +100,21 @@ public class AltaCliente extends javax.swing.JDialog {
             }
         });
 
+        emailJTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                emailJTextFieldActionPerformed(evt);
+            }
+        });
+
         telJTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 telJTextFieldActionPerformed(evt);
+            }
+        });
+
+        ap2JTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ap2JTextFieldActionPerformed(evt);
             }
         });
 
@@ -88,47 +128,86 @@ public class AltaCliente extends javax.swing.JDialog {
         jLabel8.setFont(new java.awt.Font("Eras Bold ITC", 1, 24)); // NOI18N
         jLabel8.setText("Nuevo Cliente");
 
+        letraJLabel11.setText(" ");
+
+        jLabel11.setText("Para facilitar la faena introduciremos 8 numeros en dni y la letra se asignará automáticamente");
+
+        jButton1.setText("Aceptar Alta");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Borrar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel6)
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel1))
-                        .addGap(28, 28, 28)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel6)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(4, 4, 4)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(direccionJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(ap2TextField, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(ap1JTextField, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(telJTextField, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(nombreJTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(emailJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(dniJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(jLabel8))))
-                .addGap(0, 120, Short.MAX_VALUE))
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel1))
+                                .addGap(28, 28, 28)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(4, 4, 4)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(direccionJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                .addComponent(ap2JTextField, javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(ap1JTextField, javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(telJTextField, javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(nombreJTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(dniJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(letraJLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jLabel10))
+                                            .addComponent(emailJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jLabel8)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(jLabel11)))
+                .addGap(0, 27, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(149, 149, 149)
+                .addComponent(jButton1)
+                .addGap(18, 18, 18)
+                .addComponent(jButton2)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addComponent(jLabel10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(dniJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(dniJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(letraJLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -140,7 +219,7 @@ public class AltaCliente extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(ap2TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ap2JTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
@@ -153,6 +232,10 @@ public class AltaCliente extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(emailJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(48, 48, 48)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addContainerGap())
         );
 
@@ -160,20 +243,175 @@ public class AltaCliente extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void dniJTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dniJTextFieldActionPerformed
-        // TODO add your handling code here:
+        
+        String dni = dniJTextField.getText();
+                
+        try {
+            if(dni.length()== 0){
+                javax.swing.JOptionPane.showMessageDialog(null, "Error, el campo DNI está vacío");
+            }else if (dni.length()<8 ||dni.length() > 8) {
+                javax.swing.JOptionPane.showMessageDialog(null, "Error, el numero de DNI se compone exactamente de 8 dígitos");
+            } else {
+                boolean nifValido =false;
+                for (int i = 0; i < dni.length(); i++) {
+                    
+                    nifValido = FuncionesSobreCaracteres.esNumeroValido(dni.charAt(i));                    
+                }
+                if (!nifValido) {
+                    javax.swing.JOptionPane.showMessageDialog(null, "Error, en el numero del dni solo ha de introducir digitos del 0-9");
+                }else{
+                    letraJLabel11.setText(Cliente.asignaLetraDNI(dni));
+                    dni += letraJLabel11.getText();
+                    
+                    if (eBanco.buscaDNICliente(dni) != null) {
+                    javax.swing.JOptionPane.showMessageDialog(null, "Error, ese DNI ya está"
+                            + " dado de alta como cliente, por favor prube con otro DNI");
+                    }else{
+                        dniJTextField.setBackground(Color.green);
+                        dniJTextField.setEditable(false);
+                    }
+                }
+                
+            }                
+                
+        } catch (SQLException ex) {
+            Logger.getLogger(BancoConIgSerializado.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_dniJTextFieldActionPerformed
 
     private void nombreJTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nombreJTextFieldActionPerformed
         // TODO add your handling code here:
+        String nombre = nombreJTextField.getText();
+        if (nombre.length()==0) {
+            javax.swing.JOptionPane.showMessageDialog(null, "Error el nombre debe tener una longitud superior a 0");
+        }else{
+            boolean nombreVal = false;
+            for (int i = 0; i < nombre.length(); i++) {
+                nombreVal = FuncionesSobreCaracteres.esCaracterAlfabetico(nombre.charAt(i));
+            }
+            if (!nombreVal) {
+                javax.swing.JOptionPane.showMessageDialog(null, "Error el nombre contiene carácteres no válidos, purebe a cambiarlo");
+            }else{
+                nombreJTextField.setBackground(Color.green);
+                nombreJTextField.setEditable(false);
+            }
+        }
     }//GEN-LAST:event_nombreJTextFieldActionPerformed
 
     private void telJTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_telJTextFieldActionPerformed
-        // TODO add your handling code here:
+        
+        String tel = telJTextField.getText();
+        if (tel.length()==0 || tel.length() < 9) {
+            javax.swing.JOptionPane.showMessageDialog(null, "Error el telefono debe de constituirse por 9 cifras numéricas");
+        }else{
+            boolean telVal = false;
+            for (int i = 0; i < tel.length(); i++) {
+                telVal = FuncionesSobreCaracteres.esNumeroValido(tel.charAt(i));
+            }
+            if (!telVal) {
+                javax.swing.JOptionPane.showMessageDialog(null, "Error el teléfono solo puede contener dígitos del 0-9");
+            }else{
+                telJTextField.setBackground(Color.green);
+                telJTextField.setEditable(false);
+            }
+        }
+
     }//GEN-LAST:event_telJTextFieldActionPerformed
 
     private void direccionJTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_direccionJTextFieldActionPerformed
-        // TODO add your handling code here:
+        
+        String dir = direccionJTextField.getText();
+        if (dir.length()==0) {
+            javax.swing.JOptionPane.showMessageDialog(null, "Error la dirección debe tener una longitud superior a 0");
+        }else{
+                direccionJTextField.setBackground(Color.green);
+                direccionJTextField.setEditable(false);
+            }
+        
     }//GEN-LAST:event_direccionJTextFieldActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        dispose();
+    }//GEN-LAST:event_formWindowClosing
+
+    private void ap1JTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ap1JTextFieldActionPerformed
+
+        String ap1 = ap1JTextField.getText();
+        if (ap1.length()==0) {
+            javax.swing.JOptionPane.showMessageDialog(null, "Error el apel1ido debe tener una longitud superior a 0");
+        }else{
+            boolean ap1Val = false;
+            for (int i = 0; i < ap1.length(); i++) {
+                ap1Val = FuncionesSobreCaracteres.esCaracterAlfabetico(ap1.charAt(i));
+            }
+            if (!ap1Val) {
+                javax.swing.JOptionPane.showMessageDialog(null, "Error el apellido contiene carácteres no válidos, purebe a cambiarlo");
+            }else{
+                ap1JTextField.setBackground(Color.green);
+                ap1JTextField.setEditable(false);
+            }
+        }
+    }//GEN-LAST:event_ap1JTextFieldActionPerformed
+
+    private void ap2JTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ap2JTextFieldActionPerformed
+      
+        String ap2 = ap2JTextField.getText();
+        if (ap2.length()==0) {
+            javax.swing.JOptionPane.showMessageDialog(null, "Error el apel1ido debe tener una longitud superior a 0");
+        }else{
+            boolean ap2Val = false;
+            for (int i = 0; i < ap2.length(); i++) {
+                ap2Val = FuncionesSobreCaracteres.esCaracterAlfabetico(ap2.charAt(i));
+            }
+            if (!ap2Val) {
+                javax.swing.JOptionPane.showMessageDialog(null, "Error el apellido contiene carácteres no válidos, purebe a cambiarlo");
+            }else{
+                ap2JTextField.setBackground(Color.green);
+                ap2JTextField.setEditable(false);
+            }
+        }
+    }//GEN-LAST:event_ap2JTextFieldActionPerformed
+
+    private void emailJTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailJTextFieldActionPerformed
+        String email = emailJTextField.getText();
+        if (email.length()==0) {
+            javax.swing.JOptionPane.showMessageDialog(null, "Error el email debe tener una longitud superior a 0");
+        }else{
+            boolean emailVal = false;
+            
+            try {
+                emailVal = eBanco.esEmailValido(email);
+            } catch (SQLException ex) {
+                Logger.getLogger(AltaCliente.class.getName()).log(Level.SEVERE, null, ex);
+            }            
+            if (!emailVal) {
+                javax.swing.JOptionPane.showMessageDialog(null, "Error el email no tiene un formato válido, solo admite:\n"
+                        + "\" . _ # ¡ ! ¿ ? \" y nada más que 1 @ ");
+            }else{
+                emailJTextField.setBackground(Color.green);
+                emailJTextField.setEditable(false);
+            }
+        }
+    }//GEN-LAST:event_emailJTextFieldActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        
+        
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        
+        dniJTextField.setText("");
+        nombreJTextField.setText("");
+        ap1JTextField.setText("");
+        ap2JTextField.setText("");
+        telJTextField.setText("");
+        direccionJTextField.setText("");
+        emailJTextField.setText("");
+        letraJLabel11.setText("");
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -219,11 +457,15 @@ public class AltaCliente extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField ap1JTextField;
-    private javax.swing.JTextField ap2TextField;
+    private javax.swing.JTextField ap2JTextField;
     private javax.swing.JTextField direccionJTextField;
     private javax.swing.JTextField dniJTextField;
     private javax.swing.JTextField emailJTextField;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -231,6 +473,7 @@ public class AltaCliente extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel letraJLabel11;
     private javax.swing.JTextField nombreJTextField;
     private javax.swing.JTextField telJTextField;
     // End of variables declaration//GEN-END:variables

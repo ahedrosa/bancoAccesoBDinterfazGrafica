@@ -200,6 +200,18 @@ public class Banco{
       return arrayListTarjetasCredito;
    }   
     
+    public boolean esEmailValido(String email) throws SQLException{
+        PreparedStatement consulta = con.prepareCall("SELECT ? regexp "
+                + "'^[a-z A-Z 0-9 ._#¡!¿?]{1,}@[a-z A-Z 0-9 ._#¡!¿?]{1,}.[a-z]{1,3}'");
+        consulta.setString(1, email);
+        
+        ResultSet resultado = consulta.executeQuery();
+        boolean valido = false;
+        while (resultado.next()) {            
+            valido = sqlToBoolean(resultado.getString(1));  
+        }
+        return valido;
+    }
     
     
 

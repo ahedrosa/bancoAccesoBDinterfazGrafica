@@ -87,5 +87,17 @@ public class Cliente {
     }
     
     
+    public static String asignaLetraDNI(String dni){
+        int n = 0;
+        int nif;
+        nif = Integer.parseInt(dni);
+        String[] letrasDni = new String[]{"T","R","W","A","G","M","Y",
+                                        "F","P","D","X","B","N","J","S",
+                                        "Q","V","H","L","C","K","E"}; 
+        n = nif%23;
+        
+        return letrasDni[n];
+    }
+    
     
 }
