@@ -101,6 +101,29 @@ public class Banco{
         }        
     }
     
+    public void altaCliente(Cliente cli) throws SQLException{
+        //Desde teclado se introducen los atributos de la tarjeta validandolos
+        
+        PreparedStatement consulta;
+        
+        consulta = con.prepareStatement("INSERT INTO " + nomTablaClientes + " VALUES "
+                + "(?,?,?,?,?,?,?)");
+        
+        try{
+            consulta.setString(1, cli.getDNI());
+            consulta.setString(2, cli.getNombre());
+            consulta.setString(3, cli.getAp1());
+            consulta.setString(4, cli.getAp2());
+            consulta.setString(5, cli.getDireccion());
+            consulta.setString(6, cli.getTelefono());
+            consulta.setString(7, cli.getEmail());
+            consulta.execute();
+            
+        }catch(SQLException ex){
+            throw new SQLException(ex);
+        }        
+    }
+    
     public void baja(String numTar) throws SQLException{
         
         PreparedStatement consulta;
@@ -202,7 +225,7 @@ public class Banco{
     
     public boolean esEmailValido(String email) throws SQLException{
         PreparedStatement consulta = con.prepareCall("SELECT ? regexp "
-                + "'^[a-z A-Z 0-9 ._#¡!¿?]{1,}@[a-z A-Z 0-9 ._#¡!¿?]{1,}.[a-z]{1,3}'");
+                + " '^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,6}$'");
         consulta.setString(1, email);
         
         ResultSet resultado = consulta.executeQuery();

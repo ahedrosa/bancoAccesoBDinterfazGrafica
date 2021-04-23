@@ -396,13 +396,13 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
 
     private void jButtonBajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBajaActionPerformed
         // TODO add your handling code here:
-        LogInNumTarjetaJDialog logIn = new LogInNumTarjetaJDialog(this, "Dar de Baja", eBanco);
+        ModificarBorrarTarjetaJDialog logIn = new ModificarBorrarTarjetaJDialog(this, "Dar de Baja", eBanco);
         logIn.setVisible(true);
     }//GEN-LAST:event_jButtonBajaActionPerformed
 
     private void jButtonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarActionPerformed
         // TODO add your handling code here:
-        LogInNumTarjetaJDialog logIn = new LogInNumTarjetaJDialog(this,"Modificacion", eBanco);
+        ModificarBorrarTarjetaJDialog logIn = new ModificarBorrarTarjetaJDialog(this,"Modificacion", eBanco);
         logIn.setVisible(true);
     }//GEN-LAST:event_jButtonModificarActionPerformed
 

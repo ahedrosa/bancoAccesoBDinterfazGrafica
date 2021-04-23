@@ -386,7 +386,7 @@ public class AltaCliente extends javax.swing.JDialog {
             }            
             if (!emailVal) {
                 javax.swing.JOptionPane.showMessageDialog(null, "Error el email no tiene un formato válido, solo admite:\n"
-                        + "\" . _ # ¡ ! ¿ ? \" y nada más que 1 @ ");
+                        + "\" . _ % + - \" y nada más que 1 @ ");
             }else{
                 emailJTextField.setBackground(Color.green);
                 emailJTextField.setEditable(false);
@@ -396,6 +396,38 @@ public class AltaCliente extends javax.swing.JDialog {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         
+        if (dniJTextField.getBackground() != Color.GREEN || 
+                nombreJTextField.getBackground() != Color.GREEN ||
+                ap1JTextField.getBackground() != Color.GREEN ||
+                ap2JTextField.getBackground() != Color.GREEN ||
+                direccionJTextField.getBackground() != Color.GREEN ||
+                emailJTextField.getBackground() != Color.GREEN) {
+            
+            javax.swing.JOptionPane.showMessageDialog(null, "Error, no se han validado todos los campos"
+                    + " ha de pulsar enter en cada uno de ellos");
+            
+        }else{        
+            String dni =dniJTextField.getText()+letraJLabel11.getText();
+
+            cliente = new Cliente(dni, 
+                    nombreJTextField.getText(), 
+                    ap1JTextField.getText(),
+                    ap2JTextField.getText(),
+                    direccionJTextField.getText(),
+                    telJTextField.getText(),
+                    emailJTextField.getText());
+            
+            try {
+                eBanco.altaCliente(cliente);
+            } catch (SQLException ex) {
+                Logger.getLogger(AltaCliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            javax.swing.JOptionPane.showMessageDialog(null,"Ha dado de alta al cliente "+cliente.getNombre() +" satisfactoriamente");
+            
+            dispose();
+        }
+        
         
         
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -404,12 +436,33 @@ public class AltaCliente extends javax.swing.JDialog {
         // TODO add your handling code here:
         
         dniJTextField.setText("");
+        dniJTextField.setBackground(Color.white);
+        dniJTextField.setEditable(true);
+        
         nombreJTextField.setText("");
+        nombreJTextField.setBackground(Color.white);
+        nombreJTextField.setEditable(true);
+        
         ap1JTextField.setText("");
+        ap1JTextField.setBackground(Color.white);
+        ap1JTextField.setEditable(true);
+        
         ap2JTextField.setText("");
+        ap2JTextField.setBackground(Color.white);
+        ap2JTextField.setEditable(true);
+        
         telJTextField.setText("");
+        telJTextField.setBackground(Color.white);
+        telJTextField.setEditable(true);
+        
         direccionJTextField.setText("");
+        direccionJTextField.setBackground(Color.white);
+        direccionJTextField.setEditable(true);
+        
         emailJTextField.setText("");
+        emailJTextField.setBackground(Color.white);
+        emailJTextField.setEditable(true);
+        
         letraJLabel11.setText("");
     }//GEN-LAST:event_jButton2ActionPerformed
 

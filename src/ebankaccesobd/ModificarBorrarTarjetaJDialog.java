@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
  *
  * @author Alex'sCucumbah
  */
-public class LogInNumTarjetaJDialog extends javax.swing.JDialog {
+public class ModificarBorrarTarjetaJDialog extends javax.swing.JDialog {
 
     /**
      * Creates new form logInNumTarjetaJDialog
@@ -24,12 +24,12 @@ public class LogInNumTarjetaJDialog extends javax.swing.JDialog {
     private Banco eBanco;
     private boolean tipo; //Si es tipo baja, true. Si es tipo modificacion, false
     private TarjetaCredito tarjeta = null;
-    public LogInNumTarjetaJDialog(java.awt.Frame parent, boolean modal) {
+    public ModificarBorrarTarjetaJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
 
-    public LogInNumTarjetaJDialog(java.awt.Frame parent, String title, Banco banco) {
+    public ModificarBorrarTarjetaJDialog(java.awt.Frame parent, String title, Banco banco) {
         super(parent, title);
         eBanco = banco;
         initComponents();
@@ -257,7 +257,7 @@ public class LogInNumTarjetaJDialog extends javax.swing.JDialog {
                     }
                 }
         } catch (SQLException ex) {
-            Logger.getLogger(LogInNumTarjetaJDialog.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ModificarBorrarTarjetaJDialog.class.getName()).log(Level.SEVERE, null, ex);
         }     
         
         
@@ -285,7 +285,7 @@ public class LogInNumTarjetaJDialog extends javax.swing.JDialog {
             try {
                 eBanco.baja(tarjeta.getNumTarjeta());
             } catch (SQLException ex) {
-                Logger.getLogger(LogInNumTarjetaJDialog.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ModificarBorrarTarjetaJDialog.class.getName()).log(Level.SEVERE, null, ex);
             }                      
             
             javax.swing.JOptionPane.showMessageDialog(this, "La cuenta ha sido borrada satisfactoriamente");
@@ -310,7 +310,7 @@ public class LogInNumTarjetaJDialog extends javax.swing.JDialog {
                         jCheckBoxBloqueada.isSelected(),
                         jTextFieldDNI.getText());
             } catch (SQLException ex) {
-                Logger.getLogger(LogInNumTarjetaJDialog.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ModificarBorrarTarjetaJDialog.class.getName()).log(Level.SEVERE, null, ex);
             }
             javax.swing.JOptionPane.showMessageDialog(this, "La cuenta ha sido modificada satisfactoriamente");
             dispose();            
@@ -412,14 +412,18 @@ public class LogInNumTarjetaJDialog extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LogInNumTarjetaJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ModificarBorrarTarjetaJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LogInNumTarjetaJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ModificarBorrarTarjetaJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LogInNumTarjetaJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ModificarBorrarTarjetaJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LogInNumTarjetaJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ModificarBorrarTarjetaJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -428,7 +432,7 @@ public class LogInNumTarjetaJDialog extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                LogInNumTarjetaJDialog dialog = new LogInNumTarjetaJDialog(new javax.swing.JFrame(), true);
+                ModificarBorrarTarjetaJDialog dialog = new ModificarBorrarTarjetaJDialog(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
