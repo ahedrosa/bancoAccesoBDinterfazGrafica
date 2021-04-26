@@ -236,6 +236,25 @@ public class Banco{
         return valido;
     }
     
+    public Cliente recuperaCliente(String dni) throws SQLException{
+        Cliente cli = null;
+        PreparedStatement consulta = con.prepareCall("SELECT * FROM "+nomTablaClientes+ 
+                " WHERE dni = ?");
+        consulta.setString(1, dni);
+        ResultSet respuesta = consulta.executeQuery();
+        
+        while (respuesta.next()) {            
+            cli = new Cliente(dni,
+                    respuesta.getString(2),
+                    respuesta.getString(3),
+                    respuesta.getString(4),
+                    respuesta.getString(5),
+                    respuesta.getString(6),
+                    respuesta.getString(7));
+            
+        }
+        return cli;
+    }
     
 
     public ArrayList<ClienteAux> obtenerCliDNInom() throws SQLException{

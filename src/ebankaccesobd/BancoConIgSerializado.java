@@ -614,6 +614,9 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
 
     private void jButtonModificarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarClienteActionPerformed
         // TODO add your handling code here:
+        
+        ModificarBorrarCliente modifica = new ModificarBorrarCliente(this, "Modificación", eBanco);
+        modifica.setVisible(true);
     }//GEN-LAST:event_jButtonModificarClienteActionPerformed
 
     private void jButtonBajaClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBajaClienteActionPerformed

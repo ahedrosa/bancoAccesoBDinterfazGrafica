@@ -43,7 +43,7 @@
                               <Component id="ap2JTextField" alignment="0" max="32767" attributes="0"/>
                               <Component id="ap1JTextField" alignment="0" max="32767" attributes="0"/>
                               <Component id="telJTextField" alignment="0" max="32767" attributes="0"/>
-                              <Component id="nombreJTextField2" alignment="0" min="-2" pref="81" max="-2" attributes="0"/>
+                              <Component id="nombreJTextField" alignment="0" min="-2" pref="81" max="-2" attributes="0"/>
                           </Group>
                           <Component id="dniJTextField" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="103" alignment="0" groupAlignment="1" attributes="0">
@@ -73,7 +73,7 @@
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="nombreJTextField2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="nombreJTextField" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -155,6 +155,7 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dniJTextFieldActionPerformed"/>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="dniJTextFieldKeyPressed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel4">
@@ -201,12 +202,12 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="direccionJTextFieldActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JTextField" name="nombreJTextField2">
+    <Component class="javax.swing.JTextField" name="nombreJTextField">
       <Properties>
         <Property name="editable" type="boolean" value="false"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nombreJTextField2ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nombreJTextFieldActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="emailJTextField">

@@ -64,7 +64,7 @@ public class ModificarBorrarCliente extends javax.swing.JDialog {
         jLabel7 = new javax.swing.JLabel();
         ap1JTextField = new javax.swing.JTextField();
         direccionJTextField = new javax.swing.JTextField();
-        nombreJTextField2 = new javax.swing.JTextField();
+        nombreJTextField = new javax.swing.JTextField();
         emailJTextField = new javax.swing.JTextField();
         modificarjButton = new javax.swing.JButton();
         cancelarjButton = new javax.swing.JButton();
@@ -100,6 +100,11 @@ public class ModificarBorrarCliente extends javax.swing.JDialog {
                 dniJTextFieldActionPerformed(evt);
             }
         });
+        dniJTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                dniJTextFieldKeyPressed(evt);
+            }
+        });
 
         jLabel4.setText("Apellido 2");
 
@@ -126,10 +131,10 @@ public class ModificarBorrarCliente extends javax.swing.JDialog {
             }
         });
 
-        nombreJTextField2.setEditable(false);
-        nombreJTextField2.addActionListener(new java.awt.event.ActionListener() {
+        nombreJTextField.setEditable(false);
+        nombreJTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nombreJTextField2ActionPerformed(evt);
+                nombreJTextFieldActionPerformed(evt);
             }
         });
 
@@ -174,7 +179,7 @@ public class ModificarBorrarCliente extends javax.swing.JDialog {
                                 .addComponent(ap2JTextField, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(ap1JTextField, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(telJTextField, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(nombreJTextField2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(nombreJTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(dniJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(bajaClientejButton)
@@ -196,7 +201,7 @@ public class ModificarBorrarCliente extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(nombreJTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(nombreJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -270,6 +275,7 @@ public class ModificarBorrarCliente extends javax.swing.JDialog {
     private void dniJTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dniJTextFieldActionPerformed
 
         String dni = dniJTextField.getText();
+        Cliente cliente = null;
                 
         try {
             if(dni.length()== 0){
@@ -279,10 +285,32 @@ public class ModificarBorrarCliente extends javax.swing.JDialog {
                         + " tiene que cuplir con el formato: xxxxxxxxA, compruebe que lo ha escrito correctamente");
             } else if (eBanco.buscaDNICliente(dni) == null) {
                     javax.swing.JOptionPane.showMessageDialog(null, "Error, ese DNI no está"
-                            + " dado de alta para ningun cliente, prube con otro DNI, o dar este"
-                            + " de alta");
+                            + " dado de alta en ningún cliente");
                 }else{
-                   eqwwqeqw 
+                    dniJTextField.setBackground(Color.green);
+                    dniJTextField.setEditable(false);
+                    
+                    cliente = eBanco.recuperaCliente(dni);
+                    nombreJTextField.setText(cliente.getNombre());
+                    ap1JTextField.setText(cliente.getAp1());
+                    ap2JTextField.setText(cliente.getAp2());
+                    direccionJTextField.setText(cliente.getDireccion());
+                    telJTextField.setText(cliente.getTelefono());
+                    emailJTextField.setText(cliente.getEmail());
+                
+                    if (tipo) {                        
+                        bajaClientejButton.setVisible(true);
+                    }else{
+                        modificarjButton.setVisible(true);
+                        
+                        nombreJTextField.setEditable(true);
+                        ap1JTextField.setEditable(true);
+                        ap2JTextField.setEditable(true);
+                        direccionJTextField.setEditable(true);
+                        telJTextField.setEditable(true);
+                        emailJTextField.setEditable(true);
+                        
+                    }
                 }
                 
         } catch (SQLException ex) {
@@ -321,7 +349,7 @@ public class ModificarBorrarCliente extends javax.swing.JDialog {
 
     }//GEN-LAST:event_direccionJTextFieldActionPerformed
 
-    private void nombreJTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nombreJTextField2ActionPerformed
+    private void nombreJTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nombreJTextFieldActionPerformed
         // TODO add your handling code here:
         String nombre = nombreJTextField.getText();
         if (nombre.length()==0) {
@@ -338,7 +366,7 @@ public class ModificarBorrarCliente extends javax.swing.JDialog {
                 nombreJTextField.setEditable(false);
             }
         }
-    }//GEN-LAST:event_nombreJTextField2ActionPerformed
+    }//GEN-LAST:event_nombreJTextFieldActionPerformed
 
     private void emailJTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailJTextFieldActionPerformed
         String email = emailJTextField.getText();
@@ -365,6 +393,13 @@ public class ModificarBorrarCliente extends javax.swing.JDialog {
     private void bajaClientejButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bajaClientejButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_bajaClientejButtonActionPerformed
+
+    private void dniJTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dniJTextFieldKeyPressed
+        // TODO add your handling code here:
+        if (dniJTextField.getText().compareTo("Introduzca el DNI de un cliente")==0) {
+            dniJTextField.setText("");
+        }
+    }//GEN-LAST:event_dniJTextFieldKeyPressed
 
     /**
      * @param args the command line arguments
@@ -425,8 +460,6 @@ public class ModificarBorrarCliente extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JButton modificarjButton;
     private javax.swing.JTextField nombreJTextField;
-    private javax.swing.JTextField nombreJTextField1;
-    private javax.swing.JTextField nombreJTextField2;
     private javax.swing.JTextField telJTextField;
     private javax.swing.JLabel tituloJLabel8;
     // End of variables declaration//GEN-END:variables
