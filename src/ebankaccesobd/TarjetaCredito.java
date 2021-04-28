@@ -163,7 +163,7 @@ public class TarjetaCredito{
         
     }
     
-    public int transferencia(double cantidadDinero, int pos, Banco banco){
+    public int transferencia(double cantidadDinero, TarjetaCredito tar){
         
        if (cantidadDinero < 0 ){
                 return 1;
@@ -172,7 +172,7 @@ public class TarjetaCredito{
             } else if (cantidadDinero > Banco.LIMITE_REINTEGRO){
                 return 3;
             } else{
-            banco.gettTarjetas()[pos].setSaldo(banco.gettTarjetas()[pos].getSaldo() + cantidadDinero);
+            tar.setSaldo(tar.getSaldo() + cantidadDinero);
             saldo = saldo - cantidadDinero;            
             return 4;   //System.out.println("Nuevo saldo de la cta final:" + banco.gettTarjetas()[pos].formateaNumeroTarjeta() +" : " + banco.gettTarjetas()[pos].getSaldo());
                         // System.out.println("Nuevo saldo de la cta incial: " + this.formateaNumeroTarjeta() + " : " + saldo );

@@ -22,7 +22,7 @@ public class ModificarBorrarTarjetaJDialog extends javax.swing.JDialog {
      * Creates new form logInNumTarjetaJDialog
      */
     private Banco eBanco;
-    private boolean tipo; //Si es tipo baja, true. Si es tipo modificacion, false
+    private boolean tipo; //Si es tipo baja, true. Si es tipo modificacionTarjeta, false
     private TarjetaCredito tarjeta = null;
     public ModificarBorrarTarjetaJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -304,7 +304,7 @@ public class ModificarBorrarTarjetaJDialog extends javax.swing.JDialog {
             javax.swing.JOptionPane.showMessageDialog(this, "Error alguno de los campos a modificar no es correcto, o aún no ha sido modificado");
         }else{
             try {
-                eBanco.modificacion(tarjeta.getNumTarjeta(),
+                eBanco.modificacionTarjeta(tarjeta.getNumTarjeta(),
                         jTextFieldSaldo.getText(),
                         jTextFieldPIN.getText(),
                         jCheckBoxBloqueada.isSelected(),

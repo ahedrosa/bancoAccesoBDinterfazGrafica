@@ -35,7 +35,7 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
     public BancoConIgSerializado() throws SQLException, ClassNotFoundException {
         initComponents();                
         
-        this.setLocationRelativeTo(null);
+        this.setLocationRelativeTo(null);        
         nomBD = "Banco";
         nomTablaTarjetas = "tarjeta_credito";
         nomTablaClientes = "cliente";
@@ -388,9 +388,8 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
         // TODO add your handling code here: 
 
         AltajFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        
-        AltajFrame.setVisible(true);
-       
+        AltajFrame.setLocationRelativeTo(null);
+        AltajFrame.setVisible(true);       
         
     }//GEN-LAST:event_jButtonAltaActionPerformed
 
@@ -621,6 +620,8 @@ public class BancoConIgSerializado extends javax.swing.JFrame {
 
     private void jButtonBajaClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBajaClienteActionPerformed
         // TODO add your handling code here:
+        ModificarBorrarCliente baja = new ModificarBorrarCliente(this, "Dar de Baja", eBanco);
+        baja.setVisible(true);
     }//GEN-LAST:event_jButtonBajaClienteActionPerformed
 
     private void jTextFieldDNIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldDNIActionPerformed

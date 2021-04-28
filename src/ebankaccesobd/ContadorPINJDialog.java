@@ -6,6 +6,9 @@
 package ebankaccesobd;
 
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 
 /**
@@ -18,9 +21,9 @@ public class ContadorPINJDialog extends javax.swing.JDialog {
      * Creates new form NewContadorPINJDialog
      */
     
-    int posTar;
-    int contIntentos = 0;
-    Banco eBanco;
+    private TarjetaCredito tarjeta;
+    private int contIntentos = 0;
+    private Banco eBanco;
     
     public ContadorPINJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -28,10 +31,10 @@ public class ContadorPINJDialog extends javax.swing.JDialog {
               
     }
     
-    public ContadorPINJDialog(java.awt.Frame parent, boolean modal, Banco eb, int pT) {
+    public ContadorPINJDialog(java.awt.Frame parent, boolean modal, Banco eb, TarjetaCredito tar) {
         super(parent, modal);        
         eBanco = eb;        
-        posTar = pT;
+        tarjeta = tar;
         initComponents();
     }
 
@@ -76,7 +79,7 @@ public class ContadorPINJDialog extends javax.swing.JDialog {
         jLabelContador.setText("3");
 
         jLabelTerTJT.setFont(new java.awt.Font("Tahoma", 3, 18)); // NOI18N
-        jLabelTerTJT.setText('*' + eBanco.gettTarjetas()[posTar].getNumTarjeta().substring(12));
+        jLabelTerTJT.setText('*' + tarjeta.getNumTarjeta().substring(12));
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 3, 18)); // NOI18N
         jLabel3.setText("Introduzca el pin de la tarjeta acabada en: ");
@@ -133,7 +136,7 @@ public class ContadorPINJDialog extends javax.swing.JDialog {
 
     private void jPasswordFieldPINActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordFieldPINActionPerformed
         //TODO add your handling code here
-        if (eBanco.gettTarjetas()[posTar].getPin().compareTo(String.valueOf(jPasswordFieldPIN.getPassword())) != 0){
+        if (tarjeta.getPin().compareTo(String.valueOf(jPasswordFieldPIN.getPassword())) != 0){
         contIntentos++;
             if (contIntentos != 3) {
                     javax.swing.JOptionPane.showMessageDialog(this,"Pin erroneo, le quedan " + (3 - contIntentos) + " intentos");
@@ -143,8 +146,12 @@ public class ContadorPINJDialog extends javax.swing.JDialog {
                }else{
                     javax.swing.JOptionPane.showMessageDialog(this, "Pin erroneo, no le quedan más intentos, su tarjeta ha sido bloqueada");
                     jLabelContador.setText(String.valueOf(3 - contIntentos));
-                    eBanco.gettTarjetas()[posTar].setBloqueada(true);
-                    eBanco.guardar(BancoConIgSerializado.NOMBREFICHERO);
+                    tarjeta.setBloqueada(true);
+            try {
+                eBanco.bloqueaTarjeta(tarjeta);
+            } catch (SQLException ex) {
+                Logger.getLogger(ContadorPINJDialog.class.getName()).log(Level.SEVERE, null, ex);
+            }
                     super.dispose();
                 }
                 
@@ -152,7 +159,7 @@ public class ContadorPINJDialog extends javax.swing.JDialog {
             dispose();
             //quiero llamar al padre para cerrarlo cuando el pin sea correcto 
             JFrame frame = new JFrame();
-            CajeroJDialog cajero = new CajeroJDialog(frame,"Operaciones con Tarjeta", false, eBanco, posTar);
+            CajeroJDialog cajero = new CajeroJDialog(frame,"Operaciones con Tarjeta", false, eBanco, tarjeta);
             cajero.setVisible(true);
             
         }

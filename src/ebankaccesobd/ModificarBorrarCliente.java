@@ -8,8 +8,10 @@ package ebankaccesobd;
 import java.awt.Color;
 import java.awt.Frame;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -18,7 +20,7 @@ import java.util.logging.Logger;
 public class ModificarBorrarCliente extends javax.swing.JDialog {
 
     private Banco eBanco;
-    private boolean tipo; //Si es tipo baja, true. Si es tipo modificacion, false
+    private boolean tipo; //Si es tipo baja, true. Si es tipo modificacionTarjeta, false
     private TarjetaCredito tarjeta = null;    
     
     public ModificarBorrarCliente(java.awt.Frame parent, boolean modal) {
@@ -31,13 +33,17 @@ public class ModificarBorrarCliente extends javax.swing.JDialog {
         this.eBanco = eBanco;
         initComponents();
         
+        this.setLocationRelativeTo(null);
+        
         modificarjButton.setVisible(false);
         bajaClientejButton.setVisible(false);
         
         if (title.compareTo("Dar de Baja") == 0) {
             tipo=true;
+            tituloJLabel8.setText("Baja Cliente");
         }else{
             tipo=false;
+             tituloJLabel8.setText("Modificación Cliente");
         }
     }
     
@@ -146,8 +152,18 @@ public class ModificarBorrarCliente extends javax.swing.JDialog {
         });
 
         modificarjButton.setText("Aplicar Cambios");
+        modificarjButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                modificarjButtonActionPerformed(evt);
+            }
+        });
 
         cancelarjButton.setText("Cancelar");
+        cancelarjButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelarjButtonActionPerformed(evt);
+            }
+        });
 
         bajaClientejButton.setText("Borrar Cliente");
         bajaClientejButton.addActionListener(new java.awt.event.ActionListener() {
@@ -163,6 +179,7 @@ public class ModificarBorrarCliente extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGap(52, 52, 52)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tituloJLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5)
                     .addComponent(jLabel7)
                     .addComponent(jLabel6)
@@ -180,14 +197,13 @@ public class ModificarBorrarCliente extends javax.swing.JDialog {
                                 .addComponent(ap1JTextField, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(telJTextField, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(nombreJTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(dniJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(bajaClientejButton)
                                 .addComponent(emailJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(cancelarjButton)
-                                .addComponent(modificarjButton))))
-                    .addComponent(tituloJLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(51, Short.MAX_VALUE))
+                                .addComponent(modificarjButton))
+                            .addComponent(dniJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -277,13 +293,14 @@ public class ModificarBorrarCliente extends javax.swing.JDialog {
         String dni = dniJTextField.getText();
         Cliente cliente = null;
                 
-        try {
+        
             if(dni.length()== 0){
                 javax.swing.JOptionPane.showMessageDialog(null, "Error, el campo DNI está vacío");
             }else if (!FuncionesSobreCaracteres.esDNIValido(dni)) {
                 javax.swing.JOptionPane.showMessageDialog(null, "Error, el DNI no es válido"
                         + " tiene que cuplir con el formato: xxxxxxxxA, compruebe que lo ha escrito correctamente");
-            } else if (eBanco.buscaDNICliente(dni) == null) {
+            } else try {
+                if (eBanco.buscaDNICliente(dni) == null) {
                     javax.swing.JOptionPane.showMessageDialog(null, "Error, ese DNI no está"
                             + " dado de alta en ningún cliente");
                 }else{
@@ -297,7 +314,7 @@ public class ModificarBorrarCliente extends javax.swing.JDialog {
                     direccionJTextField.setText(cliente.getDireccion());
                     telJTextField.setText(cliente.getTelefono());
                     emailJTextField.setText(cliente.getEmail());
-                
+                    
                     if (tipo) {                        
                         bajaClientejButton.setVisible(true);
                     }else{
@@ -312,10 +329,11 @@ public class ModificarBorrarCliente extends javax.swing.JDialog {
                         
                     }
                 }
-                
         } catch (SQLException ex) {
-            Logger.getLogger(BancoConIgSerializado.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ModificarBorrarCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
+                
+
     }//GEN-LAST:event_dniJTextFieldActionPerformed
 
     private void ap1JTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ap1JTextFieldActionPerformed
@@ -392,14 +410,80 @@ public class ModificarBorrarCliente extends javax.swing.JDialog {
 
     private void bajaClientejButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bajaClientejButtonActionPerformed
         // TODO add your handling code here:
+        int opcion;
+        ArrayList<String> cuentas = null;
+        String cad ="";
+        cad +="¿Está seguro de que quiere borrar el cliente con DNI:\t"+dniJTextField.getText()+"\n";
+        cad +="si acepta también serán borradas sus cuentas asociadas:\n\n";        
+        try {
+            cuentas = eBanco.obtenerCuentasPorCliente(dniJTextField.getText());
+        } catch (SQLException ex) {
+            Logger.getLogger(ModificarBorrarCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+                if (!cuentas.isEmpty()){
+                    for (int j = 0; j < cuentas.size(); j++) {
+                        cad +="\t"+ (j+1) + ". " +cuentas.get(j)+"\n";
+                    }
+                    
+                }else{
+                    cad += "Este Cliente no tiene asociada ninguna cuenta \n";
+                    
+                }
+                
+        opcion = javax.swing.JOptionPane.showConfirmDialog(null, cad, "Dar de Baja" ,JOptionPane.OK_CANCEL_OPTION);
+        
+        if (opcion == javax.swing.JOptionPane.OK_OPTION) {
+            try {
+                eBanco.bajaCliente(dniJTextField.getText());
+                javax.swing.JOptionPane.showMessageDialog(null, "Se ha realizado la baja correctamente");
+            } catch (SQLException ex) {
+                Logger.getLogger(ModificarBorrarCliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        dispose();
     }//GEN-LAST:event_bajaClientejButtonActionPerformed
+
+    private void modificarjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modificarjButtonActionPerformed
+        // TODO add your handling code here:
+        if (dniJTextField.getBackground() != Color.GREEN || nombreJTextField.getBackground() != Color.GREEN 
+                || ap1JTextField.getBackground() != Color.GREEN || ap2JTextField.getBackground() != Color.GREEN 
+                || direccionJTextField.getBackground() != Color.GREEN || telJTextField.getBackground() != Color.GREEN 
+                || emailJTextField.getBackground() != Color.GREEN) {   
+            
+            javax.swing.JOptionPane.showMessageDialog(null, "Error, no están validados todos los campos, por favor valídelos"
+                    + "(pulsando ENTER una vez rellenados) y comprobando que se ponen en verde");            
+
+        }else{
+            Cliente clienteModificado = new Cliente(dniJTextField.getText(), 
+                                        nombreJTextField.getText(), 
+                                        ap1JTextField.getText(), 
+                                        ap2JTextField.getText(), 
+                                        direccionJTextField.getText(), 
+                                        telJTextField.getText(), 
+                                        emailJTextField.getText());
+            try {
+                eBanco.modificaCliente(clienteModificado);
+            } catch (SQLException ex) {
+                Logger.getLogger(ModificarBorrarCliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            javax.swing.JOptionPane.showMessageDialog(null,"Se ha modificado el cliente coin dni:\n"
+                    +clienteModificado.getDNI() +" satisfactoriamente");
+            
+            dispose();
+        }
+    }//GEN-LAST:event_modificarjButtonActionPerformed
 
     private void dniJTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dniJTextFieldKeyPressed
         // TODO add your handling code here:
-        if (dniJTextField.getText().compareTo("Introduzca el DNI de un cliente")==0) {
+        if (dniJTextField.getText().compareTo("\"Introduzca el DNI de un cliente\"")==0) {
             dniJTextField.setText("");
         }
     }//GEN-LAST:event_dniJTextFieldKeyPressed
+
+    private void cancelarjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarjButtonActionPerformed
+        dispose();        
+    }//GEN-LAST:event_cancelarjButtonActionPerformed
 
     /**
      * @param args the command line arguments

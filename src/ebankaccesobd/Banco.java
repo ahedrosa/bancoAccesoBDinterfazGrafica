@@ -136,7 +136,14 @@ public class Banco{
         
     }
     
-    public void modificacion(String numTar, String saldo,String PIN, Boolean bloq, String DNI ) throws SQLException{
+    public void bajaCliente(String dni) throws SQLException{
+        PreparedStatement consulta = con.prepareCall("DELETE FROM "+nomTablaClientes+" WHERE"
+            + " DNI = ?");
+        consulta.setString(1, dni);
+        consulta.execute();    
+    }
+    
+    public void modificacionTarjeta(String numTar, String saldo,String PIN, Boolean bloq, String DNI ) throws SQLException{
         String  sBloq;
         
         
@@ -174,6 +181,20 @@ public class Banco{
         }
         
         return tarjeta;
+    }
+    
+    public void modificaCliente(Cliente cli) throws SQLException{
+        PreparedStatement consulta = con.prepareCall("UPDATE "+nomTablaClientes+" SET nombre = ? ,"
+                + " ap1 = ? , ap2 = ? , direccion = ? , telefono = ? , email = ? WHERE DNI = ? ");
+        consulta.setString(1, cli.getNombre());
+        consulta.setString(2, cli.getAp1());
+        consulta.setString(3, cli.getAp2());
+        consulta.setString(4, cli.getDireccion());
+        consulta.setString(5, cli.getTelefono());
+        consulta.setString(6, cli.getEmail());
+        consulta.setString(7, cli.getDNI());
+        
+        consulta.execute();        
     }
     
     public String buscaDNICliente(String dni) throws SQLException{
@@ -255,7 +276,14 @@ public class Banco{
         }
         return cli;
     }
-    
+    public void bloqueaTarjeta(TarjetaCredito tarjeta) throws SQLException{
+        PreparedStatement consulta = con.prepareCall("UPDATE "+nomTablaTarjetas+
+                " SET bloqueada = ? WHERE numTar = ?");
+        consulta.setString(1, booleanToSQL(tarjeta.isBloqueada()));
+        consulta.setString(2, tarjeta.getNumTarjeta());
+        consulta.execute();
+        
+    }
 
     public ArrayList<ClienteAux> obtenerCliDNInom() throws SQLException{
         

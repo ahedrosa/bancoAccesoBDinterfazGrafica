@@ -14,7 +14,7 @@ import javax.swing.JFrame;
  */
 public class CajeroJDialog extends javax.swing.JDialog {
     
-    int posTar;
+    TarjetaCredito tarjeta;
     Banco eBanco;
     
     
@@ -23,10 +23,10 @@ public class CajeroJDialog extends javax.swing.JDialog {
         initComponents();
     }
 
-    public CajeroJDialog(java.awt.Frame parent, String title, boolean modal, Banco eBanco, int posTar) {
+    public CajeroJDialog(java.awt.Frame parent, String title, boolean modal, Banco eBanco, TarjetaCredito tar) {
         super(parent, title, modal);       
         this.eBanco = eBanco;        
-        this.posTar = posTar;        
+        tarjeta = tar;        
         initComponents();
     }
     
@@ -56,7 +56,7 @@ public class CajeroJDialog extends javax.swing.JDialog {
         jLabel1.setText("Operaciones con tarjeta acabada en: ");
 
         jLabelTerTJT.setFont(new java.awt.Font("Tahoma", 3, 18)); // NOI18N
-        jLabelTerTJT.setText('*' + eBanco.gettTarjetas()[posTar].getNumTarjeta().substring(12));
+        jLabelTerTJT.setText('*' + tarjeta.getNumTarjeta().substring(12));
 
         jButtonConsultarSaldo.setText("Consultar Saldo");
         jButtonConsultarSaldo.addActionListener(new java.awt.event.ActionListener() {
@@ -231,7 +231,7 @@ public class CajeroJDialog extends javax.swing.JDialog {
     private void jButtonTransferenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTransferenciaActionPerformed
         // TODO add your handling code here:
         JFrame frame = new JFrame();
-        CajeroLogInJDialog login = new CajeroLogInJDialog(frame, "Cuenta remitente de transferencia", eBanco, posTar);
+        CajeroLogInJDialog login = new CajeroLogInJDialog(frame, "Cuenta remitente de transferencia", eBanco, tarjeta);
         login.setVisible(true);
         
     }//GEN-LAST:event_jButtonTransferenciaActionPerformed

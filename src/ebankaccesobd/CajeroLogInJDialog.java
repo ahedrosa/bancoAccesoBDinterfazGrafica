@@ -6,6 +6,9 @@
 package ebankaccesobd;
 
 import java.awt.Color;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 
 /**
@@ -15,8 +18,8 @@ import javax.swing.JFrame;
 public class CajeroLogInJDialog extends javax.swing.JDialog {
 
     private Banco eBanco;
-    private int posTar;
-    private int posTarEmisora;
+    private TarjetaCredito tarjetaEmisora;
+    private TarjetaCredito tarjetaReceptora;
     private boolean tipo; //Si es un log in del cajero TRUE || Si es una tarjeta para transferir FALSE
     
     public CajeroLogInJDialog(java.awt.Frame parent, boolean modal) {
@@ -37,7 +40,7 @@ public class CajeroLogInJDialog extends javax.swing.JDialog {
         }    
         
     }
-    public CajeroLogInJDialog(java.awt.Frame parent, String title, Banco banco, int posTar) {
+    public CajeroLogInJDialog(java.awt.Frame parent, String title, Banco banco, TarjetaCredito tar) {
         
         super(parent, title);
         eBanco = banco;
@@ -47,7 +50,7 @@ public class CajeroLogInJDialog extends javax.swing.JDialog {
             tipo=true;
         }else{
             tipo=false;
-            this.posTarEmisora = posTar;
+            tarjetaReceptora = tar;
         }    
         
     }
@@ -136,31 +139,44 @@ public class CajeroLogInJDialog extends javax.swing.JDialog {
 
     private void jTextFieldNumTarjetaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNumTarjetaActionPerformed
         
-        if(!tipo && eBanco.buscaPosicion(jTextFieldNumTarjeta.getText())== posTarEmisora){
+        
+        if(!tipo && tarjetaReceptora == tarjetaEmisora){
             javax.swing.JOptionPane.showMessageDialog(this, "Error, no puede realizar una transferencia a la tarjeta emisora");            
         }else if(!TarjetaCredito.esNumTarjetaValido(jTextFieldNumTarjeta.getText())){
            javax.swing.JOptionPane.showMessageDialog(this,"Error el Número de la tarjeta esta compuesto unicamente por 16 dígitos numéricos");
         }else 
-                if(eBanco.buscaPosicion(jTextFieldNumTarjeta.getText())==-1){
-                    javax.swing.JOptionPane.showMessageDialog(this,"Error este número de tarjeta no existe");
-                }else if (eBanco.gettTarjetas()[eBanco.buscaPosicion(jTextFieldNumTarjeta.getText())].isBloqueada()) {
-                    javax.swing.JOptionPane.showMessageDialog(this,"Error esta tarjeta está bloqueada. Por favor contacte con nuestro banco TLF: 123-132-123");
-                }else{
+                try {
+                    if(eBanco.buscaNtarjeta(jTextFieldNumTarjeta.getText()) == null){
+                        javax.swing.JOptionPane.showMessageDialog(this,"Error este número de tarjeta no existe");
+                    }else if (eBanco.devuelveTarjeta(jTextFieldNumTarjeta.getText()).isBloqueada()) {
+                        javax.swing.JOptionPane.showMessageDialog(this,"Error esta tarjeta está bloqueada. Por favor contacte con nuestro banco TLF: 123-132-123");
+                    }else{
                         jTextFieldNumTarjeta.setBackground(Color.green);
                         jTextFieldNumTarjeta.setEditable(false);
-                        posTar = eBanco.buscaPosicion(jTextFieldNumTarjeta.getText());                
+                        tarjetaEmisora = eBanco.devuelveTarjeta(jTextFieldNumTarjeta.getText());
                     }
+        } catch (SQLException ex) {
+            Logger.getLogger(CajeroLogInJDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jTextFieldNumTarjetaActionPerformed
 
     private void jButtonAccederActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAccederActionPerformed
-        // TODO add your handling code here:
-        if (eBanco.gettTarjetas()[eBanco.buscaPosicion(jTextFieldNumTarjeta.getText())].isBloqueada()) {
+        TarjetaCredito tarjeta = null;
+        
+        try {
+            // TODO add your handling code here:
+            tarjeta = eBanco.devuelveTarjeta(jTextFieldNumTarjeta.getText());
+        } catch (SQLException ex) {
+            Logger.getLogger(CajeroLogInJDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        if (tarjeta.isBloqueada()) {
             javax.swing.JOptionPane.showMessageDialog(this, "Error, esa tarjeta está bloqueada, póngase en contacto con su banco");
             super.dispose();
         }else if(tipo){
             JFrame frame = new JFrame();        
             dispose();
-            ContadorPINJDialog contador = new ContadorPINJDialog(frame, true, eBanco, posTar);
+            ContadorPINJDialog contador = new ContadorPINJDialog(frame, true, eBanco, tarjetaEmisora);
             contador.setVisible(true);            
         }else{
             double cantidad = 0.0;
@@ -168,7 +184,7 @@ public class CajeroLogInJDialog extends javax.swing.JDialog {
         
             try{
                cantidad = Double.parseDouble(javax.swing.JOptionPane.showInputDialog("Introduzca la cantidad de dinero que quiere transferir")); 
-               error = eBanco.gettTarjetas()[posTarEmisora].transferencia(cantidad,posTar, eBanco);
+               error = tarjetaEmisora.transferencia(cantidad,tarjetaReceptora);
             }catch(NumberFormatException e){
                 javax.swing.JOptionPane.showMessageDialog(this,"Error, la cantidad a retirar ha de ser un número decimal, separado por un punto (.)");             
             }
@@ -180,17 +196,24 @@ public class CajeroLogInJDialog extends javax.swing.JDialog {
                 javax.swing.JOptionPane.showMessageDialog(this, "Error, la cantidad introducida ha de ser positiva");
                 break;
             case 2:
-                javax.swing.JOptionPane.showMessageDialog(this, "Error, la cantidad introducida no puede exceder el saldo de la Tarjeta: " + eBanco.gettTarjetas()[posTarEmisora].getSaldo() + "€");
+                javax.swing.JOptionPane.showMessageDialog(this, "Error, la cantidad introducida no puede exceder el saldo de la Tarjeta: " + tarjetaEmisora.getSaldo() + "€");
                 break;
             case 3:
                 javax.swing.JOptionPane.showMessageDialog(this, "Error, la cantidad introducida no puede exceder los " + Banco.LIMITE_REINTEGRO + " €.");
                 break;
             case 4:
-                javax.swing.JOptionPane.showMessageDialog(this, "Transferencia realizada con éxito. Nuevo saldo de la cta final:" + eBanco.gettTarjetas()[posTar].formateaNumeroTarjeta()
-                                                            + " : " + eBanco.gettTarjetas()[posTar].getSaldo()+"€");
-                javax.swing.JOptionPane.showMessageDialog(this, "Nuevo saldo de la cta incial: " + eBanco.gettTarjetas()[posTarEmisora].formateaNumeroTarjeta() 
-                                                            + " : " +eBanco.gettTarjetas()[posTarEmisora].getSaldo()+"€");
-                eBanco.guardar(BancoConIgSerializado.NOMBREFICHERO);
+                javax.swing.JOptionPane.showMessageDialog(this, "Transferencia realizada con éxito. Nuevo saldo de la cta final:" + tarjetaReceptora.formateaNumeroTarjeta()
+                                                            + " : " + tarjetaReceptora.getSaldo()+"€");
+                javax.swing.JOptionPane.showMessageDialog(this, "Nuevo saldo de la cta incial: " + tarjetaEmisora.formateaNumeroTarjeta() 
+                                                            + " : " +tarjetaEmisora.getSaldo()+"€");
+            {
+                try {
+                    eBanco.modificacionTarjeta(tarjetaEmisora.getNumTarjeta(), String.valueOf(tarjetaEmisora.getSaldo()), tarjetaEmisora.getPin(), tarjetaEmisora.isBloqueada(), tarjetaEmisora.getDniTitular());
+                    eBanco.modificacionTarjeta(tarjetaReceptora.getNumTarjeta(), String.valueOf(tarjetaReceptora.getSaldo()), tarjetaReceptora.getPin(), tarjetaReceptora.isBloqueada(), tarjetaReceptora.getDniTitular());
+                } catch (SQLException ex) {
+                    Logger.getLogger(CajeroLogInJDialog.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
                 dispose();
                 break;
             }

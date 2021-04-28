@@ -95,7 +95,7 @@
           <Font name="Tahoma" size="18" style="3"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="&apos;*&apos; + eBanco.gettTarjetas()[posTar].getNumTarjeta().substring(12)" type="code"/>
+          <Connection code="&apos;*&apos; + tarjeta.getNumTarjeta().substring(12)" type="code"/>
         </Property>
       </Properties>
     </Component>
