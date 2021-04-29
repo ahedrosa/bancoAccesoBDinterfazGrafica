@@ -6,6 +6,9 @@
 package ebankaccesobd;
 
 import java.awt.Frame;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 
 /**
@@ -28,6 +31,8 @@ public class CajeroJDialog extends javax.swing.JDialog {
         this.eBanco = eBanco;        
         tarjeta = tar;        
         initComponents();
+        
+        this.setLocationRelativeTo(null);
     }
     
     
@@ -152,13 +157,13 @@ public class CajeroJDialog extends javax.swing.JDialog {
 
     private void jButtonConsultarSaldoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConsultarSaldoActionPerformed
         // TODO add your handling code here:
-        javax.swing.JOptionPane.showMessageDialog(this, "El saldo actual de su tarjeta es de: " + eBanco.gettTarjetas()[posTar].getSaldo()+"€");
+        javax.swing.JOptionPane.showMessageDialog(this, "El saldo actual de su tarjeta es de: " + tarjeta.getSaldo()+"€");
     }//GEN-LAST:event_jButtonConsultarSaldoActionPerformed
 
     private void jButtonCambioPinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCambioPinActionPerformed
         // TODO add your handling code here:
         JFrame frame = new JFrame();
-        NuevoPINJDialog ressetpin = new NuevoPINJDialog(frame, "Cambio de PIN" ,eBanco, posTar);
+        NuevoPINJDialog ressetpin = new NuevoPINJDialog(frame, "Cambio de PIN" ,eBanco, tarjeta);
         ressetpin.setVisible(true);
     }//GEN-LAST:event_jButtonCambioPinActionPerformed
 
@@ -174,7 +179,7 @@ public class CajeroJDialog extends javax.swing.JDialog {
         
         try{
            cantidad = Double.parseDouble(javax.swing.JOptionPane.showInputDialog("Introduzca la cantidad de dinero a retirar")); 
-           error = eBanco.gettTarjetas()[posTar].reintegro(cantidad);
+           error = tarjeta.reintegro(cantidad);
         }catch(NumberFormatException e){
             javax.swing.JOptionPane.showMessageDialog(this,"Error, la cantidad a retirar ha de ser un número decimal, separado por un punto (.)");             
         }
@@ -187,14 +192,20 @@ public class CajeroJDialog extends javax.swing.JDialog {
                 javax.swing.JOptionPane.showMessageDialog(this, "Error, la cantidad introducida ha de ser positiva");
                 break;
             case 2:
-                javax.swing.JOptionPane.showMessageDialog(this, "Error, la cantidad introducida no puede exceder el saldo de la Tarjeta: " + eBanco.gettTarjetas()[posTar].getSaldo() + "€");
+                javax.swing.JOptionPane.showMessageDialog(this, "Error, la cantidad introducida no puede exceder el saldo de la Tarjeta: " + tarjeta.getSaldo() + "€");
                 break;
             case 3:
                 javax.swing.JOptionPane.showMessageDialog(this, "Error, la cantidad introducida no puede exceder los " + Banco.LIMITE_REINTEGRO + " €.");
                 break;
             case 4:
                 javax.swing.JOptionPane.showMessageDialog(this, "Se han retirado "+ cantidad +"€ satisfactoriamente");
-                eBanco.guardar(BancoConIgSerializado.NOMBREFICHERO);
+        {
+            try {
+                eBanco.modificacionTarjeta(tarjeta.getNumTarjeta(), String.valueOf(tarjeta.getSaldo()), tarjeta.getPin(), tarjeta.isBloqueada(), tarjeta.getDniTitular());
+            } catch (SQLException ex) {
+                Logger.getLogger(CajeroJDialog.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
                 break;
         }
         
@@ -207,7 +218,7 @@ public class CajeroJDialog extends javax.swing.JDialog {
         
         try{
            cantidad = Double.parseDouble(javax.swing.JOptionPane.showInputDialog("Introduzca la cantidad de dinero a ingresar")); 
-           error = eBanco.gettTarjetas()[posTar].ingreso(cantidad);
+           error = tarjeta.ingreso(cantidad);
         }catch(NumberFormatException e){
             javax.swing.JOptionPane.showMessageDialog(this,"Error, la cantidad a ingresar ha de ser un número decimal, separado por un punto (.)");             
         }
@@ -222,8 +233,14 @@ public class CajeroJDialog extends javax.swing.JDialog {
                 javax.swing.JOptionPane.showMessageDialog(this, "Error, la cantidad introducida no puede exceder los " + Banco.LIMITE_INGRESO + " €.");
                 break;
             case 3:
-                javax.swing.JOptionPane.showMessageDialog(this, "Se han ingresado "+ cantidad +"€ satisfactoriamente. Su nuevo saldo es " + eBanco.gettTarjetas()[posTar].getSaldo()+ "€");
-                eBanco.guardar(BancoConIgSerializado.NOMBREFICHERO);
+                javax.swing.JOptionPane.showMessageDialog(this, "Se han ingresado "+ cantidad +"€ satisfactoriamente. Su nuevo saldo es " + tarjeta.getSaldo()+ "€");
+        {
+            try {
+                eBanco.modificacionTarjeta(tarjeta.getNumTarjeta(), String.valueOf(tarjeta.getSaldo()), tarjeta.getPin(), tarjeta.isBloqueada(), tarjeta.getDniTitular());
+            } catch (SQLException ex) {
+                Logger.getLogger(CajeroJDialog.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
                 break;
         }
     }//GEN-LAST:event_jButtonIngresoActionPerformed

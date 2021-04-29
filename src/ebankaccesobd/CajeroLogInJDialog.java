@@ -33,6 +33,8 @@ public class CajeroLogInJDialog extends javax.swing.JDialog {
         eBanco = banco;
         initComponents();
         
+        this.setLocationRelativeTo(null);
+        
         if (title.compareTo("Log In Cajero") == 0) {
             tipo=true;
         }else{
@@ -50,7 +52,7 @@ public class CajeroLogInJDialog extends javax.swing.JDialog {
             tipo=true;
         }else{
             tipo=false;
-            tarjetaReceptora = tar;
+            tarjetaEmisora = tar;
         }    
         
     }
@@ -138,36 +140,55 @@ public class CajeroLogInJDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTextFieldNumTarjetaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNumTarjetaActionPerformed
-        
-        
-        if(!tipo && tarjetaReceptora == tarjetaEmisora){
-            javax.swing.JOptionPane.showMessageDialog(this, "Error, no puede realizar una transferencia a la tarjeta emisora");            
-        }else if(!TarjetaCredito.esNumTarjetaValido(jTextFieldNumTarjeta.getText())){
-           javax.swing.JOptionPane.showMessageDialog(this,"Error el Número de la tarjeta esta compuesto unicamente por 16 dígitos numéricos");
-        }else 
-                try {
-                    if(eBanco.buscaNtarjeta(jTextFieldNumTarjeta.getText()) == null){
-                        javax.swing.JOptionPane.showMessageDialog(this,"Error este número de tarjeta no existe");
-                    }else if (eBanco.devuelveTarjeta(jTextFieldNumTarjeta.getText()).isBloqueada()) {
-                        javax.swing.JOptionPane.showMessageDialog(this,"Error esta tarjeta está bloqueada. Por favor contacte con nuestro banco TLF: 123-132-123");
-                    }else{
-                        jTextFieldNumTarjeta.setBackground(Color.green);
-                        jTextFieldNumTarjeta.setEditable(false);
-                        tarjetaEmisora = eBanco.devuelveTarjeta(jTextFieldNumTarjeta.getText());
-                    }
+        TarjetaCredito tarjeta = null;
+        try {
+            tarjeta = eBanco.devuelveTarjeta(jTextFieldNumTarjeta.getText());
         } catch (SQLException ex) {
             Logger.getLogger(CajeroLogInJDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        if(!TarjetaCredito.esNumTarjetaValido(jTextFieldNumTarjeta.getText())){
+           javax.swing.JOptionPane.showMessageDialog(this,"Error el Número de la"
+                   + " tarjeta esta compuesto unicamente por 16 dígitos numéricos");
+           
+        }else if(tarjeta == null){
+                    javax.swing.JOptionPane.showMessageDialog(this,"Error este"
+                            + " número de tarjeta no existe");
+                }else if (tarjeta.isBloqueada()){
+                    javax.swing.JOptionPane.showMessageDialog(this,"Error esta tarjeta"
+                            + " está bloqueada. Por favor contacte con nuestro banco TLF: 123-132-123");
+                    
+                }else{
+
+                    if(!tipo){
+                        
+                        if(tarjeta.getNumTarjeta().compareTo(tarjetaEmisora.getNumTarjeta()) == 0){
+                            javax.swing.JOptionPane.showMessageDialog(this, "Error, no puede "
+                                    + "realizar una transferencia a la tarjeta emisora");
+                        }else{                            
+                                jTextFieldNumTarjeta.setBackground(Color.green);
+                                jTextFieldNumTarjeta.setEditable(false);
+                                tarjetaReceptora = tarjeta;
+                            }          
+
+                    }else{
+                        
+                        jTextFieldNumTarjeta.setBackground(Color.green);
+                        jTextFieldNumTarjeta.setEditable(false);
+                        tarjetaEmisora = tarjeta;                        
+                    }
+                
+
         }
     }//GEN-LAST:event_jTextFieldNumTarjetaActionPerformed
 
     private void jButtonAccederActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAccederActionPerformed
         TarjetaCredito tarjeta = null;
         
-        try {
-            // TODO add your handling code here:
+        try {            
             tarjeta = eBanco.devuelveTarjeta(jTextFieldNumTarjeta.getText());
         } catch (SQLException ex) {
-            Logger.getLogger(CajeroLogInJDialog.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error al recuperar tarjeta");
         }
         
         if (tarjeta.isBloqueada()) {
@@ -235,6 +256,7 @@ public class CajeroLogInJDialog extends javax.swing.JDialog {
         jTextFieldNumTarjeta.setFont(new java.awt.Font("Tahoma", 2, 12)); 
         jTextFieldNumTarjeta.setText("Introduzca el número de su tarjeta");
         jTextFieldNumTarjeta.setBackground(Color.white);
+        jTextFieldNumTarjeta.setEditable(true);
     }//GEN-LAST:event_jButtonBorrarActionPerformed
 
     /**

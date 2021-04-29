@@ -36,6 +36,8 @@ public class ContadorPINJDialog extends javax.swing.JDialog {
         eBanco = eb;        
         tarjeta = tar;
         initComponents();
+        
+        this.setLocationRelativeTo(null);
     }
 
     /**

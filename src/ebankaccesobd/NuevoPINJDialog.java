@@ -7,6 +7,9 @@ package ebankaccesobd;
 
 import java.awt.Color;
 import java.awt.Frame;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -15,13 +18,15 @@ import java.awt.Frame;
 public class NuevoPINJDialog extends javax.swing.JDialog {
 
     Banco eBanco;
-    int posTar;
+    TarjetaCredito tarjeta;
 
-    public NuevoPINJDialog( Frame parent, String title, Banco eBanco, int posTar) {
+    public NuevoPINJDialog( Frame parent, String title, Banco eBanco, TarjetaCredito tar) {
         super(parent, title);
         this.eBanco = eBanco;
-        this.posTar = posTar;
+        tarjeta = tar;
         initComponents();
+        
+        this.setLocationRelativeTo(null);
     }
     
     public NuevoPINJDialog(java.awt.Frame parent, boolean modal) {
@@ -141,8 +146,12 @@ public class NuevoPINJDialog extends javax.swing.JDialog {
         if (jTextFieldPIN.getBackground() == Color.RED) {
             javax.swing.JOptionPane.showMessageDialog(this, "Error, compruebe que el PIN ha sido verificado, para ello se ha de poner de color verde tras pulsar ENTER");
         } else {
-            eBanco.gettTarjetas()[posTar].setPin(jTextFieldPIN.getText());
-            eBanco.guardar(BancoConIgSerializado.NOMBREFICHERO);
+            tarjeta.setPin(jTextFieldPIN.getText());
+            try {
+                eBanco.modificacionTarjeta(tarjeta.getNumTarjeta(), String.valueOf(tarjeta.getSaldo()), tarjeta.getPin(), tarjeta.isBloqueada(), tarjeta.getDniTitular());
+            } catch (SQLException ex) {
+                Logger.getLogger(NuevoPINJDialog.class.getName()).log(Level.SEVERE, null, ex);
+            }
             javax.swing.JOptionPane.showMessageDialog(this, "PIN Modificado con éxito");
             dispose();
         }
