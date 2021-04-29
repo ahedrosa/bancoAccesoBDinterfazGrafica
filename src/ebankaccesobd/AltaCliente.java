@@ -245,38 +245,34 @@ public class AltaCliente extends javax.swing.JDialog {
     private void dniJTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dniJTextFieldActionPerformed
         
         String dni = dniJTextField.getText();
-                
-        try {
+        
             if(dni.length()== 0){
                 javax.swing.JOptionPane.showMessageDialog(null, "Error, el campo DNI está vacío");
-            }else if (dni.length()<8 ||dni.length() > 8) {
-                javax.swing.JOptionPane.showMessageDialog(null, "Error, el numero de DNI se compone exactamente de 8 dígitos");
-            } else {
-                boolean nifValido =false;
-                for (int i = 0; i < dni.length(); i++) {
-                    
-                    nifValido = FuncionesSobreCaracteres.esNumeroValido(dni.charAt(i));                    
-                }
-                if (!nifValido) {
-                    javax.swing.JOptionPane.showMessageDialog(null, "Error, en el numero del dni solo ha de introducir digitos del 0-9");
-                }else{
-                    letraJLabel11.setText(Cliente.asignaLetraDNI(dni));
-                    dni += letraJLabel11.getText();
-                    
-                    if (eBanco.buscaDNICliente(dni) != null) {
+            }else if (!FuncionesSobreCaracteres.esDNIValido(dni)) {
+                javax.swing.JOptionPane.showMessageDialog(null, "Error, el DNI no es válido"
+                        + " tiene que cuplir con el formato: xxxxxxxxA, compruebe que lo ha escrito correctamente");
+            } else try {
+                if (eBanco.buscaDNICliente(dni) != null) {
                     javax.swing.JOptionPane.showMessageDialog(null, "Error, ese DNI ya está"
-                            + " dado de alta como cliente, por favor prube con otro DNI");
-                    }else{
-                        dniJTextField.setBackground(Color.green);
-                        dniJTextField.setEditable(false);
-                    }
+                            + " dado de alta para un cliente");
+                }else{
+                    dniJTextField.setBackground(Color.green);
+                    dniJTextField.setEditable(false);
+                    
+                    cliente = eBanco.recuperaCliente(dni);
+                    nombreJTextField.setText(cliente.getNombre());
+                    ap1JTextField.setText(cliente.getAp1());
+                    ap2JTextField.setText(cliente.getAp2());
+                    direccionJTextField.setText(cliente.getDireccion());
+                    telJTextField.setText(cliente.getTelefono());
+                    emailJTextField.setText(cliente.getEmail());
+                    
+                    
                 }
-                
-            }                
-                
         } catch (SQLException ex) {
-            Logger.getLogger(BancoConIgSerializado.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ModificarBorrarCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
+                
     }//GEN-LAST:event_dniJTextFieldActionPerformed
 
     private void nombreJTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nombreJTextFieldActionPerformed
