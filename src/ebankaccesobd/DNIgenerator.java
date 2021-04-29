@@ -8,11 +8,7 @@ package ebankaccesobd;
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +25,8 @@ public class DNIgenerator extends javax.swing.JDialog {
         super(parent, modal);
         eBanco = banco;
         initComponents();
+        
+        this.setLocationRelativeTo(null);
         
     }
     public DNIgenerator(java.awt.Frame parent, boolean modal) {

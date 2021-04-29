@@ -45,6 +45,9 @@ public class FuncionesSobreCaracteres {
         for (int i = 0; i < 8; i++) {
             ndni += dni.charAt(i);
         }
+        if (dni.length()<9 || dni.length() > 9) {
+            return false;
+        }        
         DNIletra = dni.charAt(8);
         nLetra = Integer.parseInt(ndni)%23;
         

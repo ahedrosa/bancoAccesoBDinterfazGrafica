@@ -136,6 +136,31 @@ public class Banco{
         
     }
     
+    public CuentasPorCliente obtenerCuentasCliente(String dni) throws SQLException{
+        CuentasPorCliente cuentasCli = null;
+        Cliente cliente = null;
+        ArrayList<TarjetaCredito> tTarjetas = new ArrayList<>();
+        
+        PreparedStatement consulta = con.prepareCall("SELECT * FROM "+nomTablaClientes+
+                " LEFT JOIN ON "+nomTablaTarjetas+".dniTitular = "+nomTablaClientes+".DNI WHERE DNI = ?");
+        consulta.setString(1, dni);
+        
+        ResultSet resultado = consulta.executeQuery();
+        
+        while (resultado.next()) {            
+            cliente = new Cliente(resultado.getString("DNI"),dasfsa
+                                    resultado.getString("DNI"),
+                                    resultado.getString("DNI"),
+                                    resultado.getString("DNI"),
+                                    resultado.getString("DNI"),
+                                    resultado.getString("DNI"),
+                                    resultado.getString("DNI"));
+            
+            
+        }
+        cuentasCli = new CuentasPorCliente(cliente, tTarjetas);
+    }
+    
     public void bajaCliente(String dni) throws SQLException{
         PreparedStatement consulta = con.prepareCall("DELETE FROM "+nomTablaClientes+" WHERE"
             + " DNI = ?");
