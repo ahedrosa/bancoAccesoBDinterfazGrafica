@@ -142,23 +142,34 @@ public class Banco{
         ArrayList<TarjetaCredito> tTarjetas = new ArrayList<>();
         
         PreparedStatement consulta = con.prepareCall("SELECT * FROM "+nomTablaClientes+
-                " LEFT JOIN ON "+nomTablaTarjetas+".dniTitular = "+nomTablaClientes+".DNI WHERE DNI = ?");
+                " LEFT JOIN "+nomTablaTarjetas+" ON "+nomTablaTarjetas+".dniTitular = "+nomTablaClientes+".DNI WHERE DNI = ?");
         consulta.setString(1, dni);
         
         ResultSet resultado = consulta.executeQuery();
         
         while (resultado.next()) {            
-            cliente = new Cliente(resultado.getString("DNI"),dasfsa
-                                    resultado.getString("DNI"),
-                                    resultado.getString("DNI"),
-                                    resultado.getString("DNI"),
-                                    resultado.getString("DNI"),
-                                    resultado.getString("DNI"),
-                                    resultado.getString("DNI"));
-            
+            cliente = new Cliente(resultado.getString("DNI"),
+                                    resultado.getString("nombre"),
+                                    resultado.getString("ap1"),
+                                    resultado.getString("ap2"),
+                                    resultado.getString("direccion"),
+                                    resultado.getString("telefono"),
+                                    resultado.getString("email"));
+            if (resultado.getString("numTar") != null) {
+                tTarjetas.add(new TarjetaCredito(resultado.getString("numTar"),
+                    resultado.getString("pin"), 
+                    Double.parseDouble(resultado.getString("saldo")),
+                    this.sqlToBoolean(resultado.getString("bloqueada")),
+                    resultado.getString("dniTitular")));
+                     
+            }else{
+                tTarjetas = null;
+            }
             
         }
         cuentasCli = new CuentasPorCliente(cliente, tTarjetas);
+        
+        return cuentasCli;
     }
     
     public void bajaCliente(String dni) throws SQLException{

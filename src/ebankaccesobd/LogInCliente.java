@@ -127,7 +127,12 @@ public class LogInCliente extends javax.swing.JDialog {
                     + " debe de pulsar ENTER y quedarse el fondo de color VERDE");
         }else{
             JFrame padre = new JFrame();
-            AccesoCuentasClienteComboBox acceso = new AccesoCuentasClienteComboBox(padre, false, eBanco, cliente);
+            AccesoCuentasClienteComboBox acceso = null;
+            try {
+                acceso = new AccesoCuentasClienteComboBox(padre, false, eBanco, cliente);
+            } catch (SQLException ex) {
+                Logger.getLogger(LogInCliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
             acceso.setVisible(true);
             dispose();
         }
@@ -136,7 +141,6 @@ public class LogInCliente extends javax.swing.JDialog {
     private void dniJTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dniJTextFieldActionPerformed
 
         String dni = dniJTextField.getText();
-        Cliente cliente = null;
 
         if(dni.length()== 0){
             javax.swing.JOptionPane.showMessageDialog(null, "Error, el campo DNI está vacío");

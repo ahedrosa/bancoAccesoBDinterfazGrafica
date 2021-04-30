@@ -5,6 +5,8 @@
  */
 package ebankaccesobd;
 
+import java.sql.SQLException;
+
 /**
  *
  * @author Nocturno
@@ -13,23 +15,39 @@ public class AccesoCuentasClienteComboBox extends javax.swing.JDialog {
 
     Banco eBanco;
     Cliente cliente;
+    CuentasPorCliente tCuentas;
     
     public AccesoCuentasClienteComboBox(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
     
-    public AccesoCuentasClienteComboBox(java.awt.Frame parent, boolean modal, Banco banco, Cliente cli) {
+    public AccesoCuentasClienteComboBox(java.awt.Frame parent, boolean modal, Banco banco, Cliente cli) throws SQLException {
         super(parent, modal);
         eBanco = banco;
         cliente = cli;
         
+        tCuentas = eBanco.obtenerCuentasCliente(cli.getDNI());
         initComponents();
         
+        formateaComboBox();
         
         
     }
-
+    
+    public void formateaComboBox(){
+        
+        if (tCuentas.gettTarjetas()==null) {
+            tCuentasCombojComboBox1.addItem("El cliente seleccionado no tiene cuentas asociadas");
+        }else{
+            for (int i = 0; i < tCuentas.gettTarjetas().size(); i++) {
+            tCuentasCombojComboBox1.addItem(tCuentas.gettTarjetas().get(i).formateaNumeroTarjeta());
+            
+            }            
+        }   
+        
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -43,6 +61,7 @@ public class AccesoCuentasClienteComboBox extends javax.swing.JDialog {
         jLabel2 = new javax.swing.JLabel();
         dniJLabel = new javax.swing.JLabel();
         nombreJLabel = new javax.swing.JLabel();
+        tCuentasCombojComboBox1 = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -68,21 +87,25 @@ public class AccesoCuentasClienteComboBox extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dniJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(370, Short.MAX_VALUE))
+                        .addComponent(dniJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(53, 53, 53)
+                        .addComponent(tCuentasCombojComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(44, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(60, 60, 60)
+                .addGap(57, 57, 57)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(dniJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(dniJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(tCuentasCombojComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(nombreJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(225, Short.MAX_VALUE))
+                .addContainerGap(175, Short.MAX_VALUE))
         );
 
         pack();
@@ -135,5 +158,6 @@ public class AccesoCuentasClienteComboBox extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel nombreJLabel;
+    private javax.swing.JComboBox<String> tCuentasCombojComboBox1;
     // End of variables declaration//GEN-END:variables
 }
