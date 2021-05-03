@@ -6,6 +6,7 @@
 package ebankaccesobd;
 
 import java.awt.Color;
+import java.awt.Event;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -38,6 +39,26 @@ public class ModificarBorrarTarjetaJDialog extends javax.swing.JDialog {
         jButtonAceptarBaja.setVisible(false);
         jButtonAceptarModificacion.setVisible(false);
         
+        if (title.compareTo("Dar de Baja") == 0) {
+            tipo=true;
+        }else{
+            tipo=false;
+        }
+    }
+    
+    public ModificarBorrarTarjetaJDialog(java.awt.Frame parent, String title, Banco banco, TarjetaCredito tar) {
+        super(parent, title);
+        eBanco = banco;
+        tarjeta = tar;
+        initComponents();        
+        
+        
+        this.setLocationRelativeTo(null);
+        jButtonAceptarBaja.setVisible(false);
+        jButtonAceptarModificacion.setVisible(false);
+        
+        jTextFieldNumTarjeta.setText(tarjeta.getNumTarjeta());
+        jTextFieldNumTarjetaActua();
         if (title.compareTo("Dar de Baja") == 0) {
             tipo=true;
         }else{
@@ -262,6 +283,43 @@ public class ModificarBorrarTarjetaJDialog extends javax.swing.JDialog {
         
         
     }//GEN-LAST:event_jTextFieldNumTarjetaActionPerformed
+    
+    private void jTextFieldNumTarjetaActua() {                                                     
+        // TODO add your handling code here:
+        if(!TarjetaCredito.esNumTarjetaValido(jTextFieldNumTarjeta.getText())){
+           javax.swing.JOptionPane.showMessageDialog(this,"Error el Número de la tarjeta esta compuesto unicamente por 16 dígitos numéricos");
+        }else 
+            try {
+                if(eBanco.buscaNtarjeta(jTextFieldNumTarjeta.getText())== null){
+                    javax.swing.JOptionPane.showMessageDialog(this,"Error este número de tarjeta no existe");
+                }else{
+                    jTextFieldNumTarjeta.setBackground(Color.green);
+                    jTextFieldNumTarjeta.setEditable(false);
+                    
+                    tarjeta= eBanco.devuelveTarjeta(jTextFieldNumTarjeta.getText());
+                    
+                    jTextFieldPIN.setText(tarjeta.getPin());
+                    jTextFieldSaldo.setText(String.valueOf(tarjeta.getSaldo()));
+                    jCheckBoxBloqueada.setSelected(tarjeta.isBloqueada());
+                    jTextFieldDNI.setText(tarjeta.getDniTitular());                    
+                    
+                    if (tipo) {
+                        jButtonAceptarBaja.setVisible(true);
+                    }else{
+                        jButtonAceptarModificacion.setVisible(true);
+                        jTextFieldPIN.setEditable(true);
+                        jTextFieldSaldo.setEditable(true);
+                        jTextFieldDNI.setEditable(true);
+                        jCheckBoxBloqueada.setEnabled(true);
+                        jLabelVerificacion.setVisible(true);
+                    }
+                }
+        } catch (SQLException ex) {
+            Logger.getLogger(ModificarBorrarTarjetaJDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }     
+        
+        
+    }                                                    
 
     private void jTextFieldNumTarjetaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldNumTarjetaKeyPressed
         // TODO add your handling code here:
