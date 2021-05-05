@@ -39,11 +39,7 @@ public class ModificarBorrarTarjetaJDialog extends javax.swing.JDialog {
         jButtonAceptarBaja.setVisible(false);
         jButtonAceptarModificacion.setVisible(false);
         
-        if (title.compareTo("Dar de Baja") == 0) {
-            tipo=true;
-        }else{
-            tipo=false;
-        }
+        tipo = title.compareTo("Dar de Baja") == 0;
     }
     
     public ModificarBorrarTarjetaJDialog(java.awt.Frame parent, String title, Banco banco, TarjetaCredito tar) {
@@ -57,13 +53,11 @@ public class ModificarBorrarTarjetaJDialog extends javax.swing.JDialog {
         jButtonAceptarBaja.setVisible(false);
         jButtonAceptarModificacion.setVisible(false);
         
+        tipo = title.compareTo("Dar de Baja") == 0;
+        
         jTextFieldNumTarjeta.setText(tarjeta.getNumTarjeta());
         jTextFieldNumTarjetaActua();
-        if (title.compareTo("Dar de Baja") == 0) {
-            tipo=true;
-        }else{
-            tipo=false;
-        }
+        
     }
 
     /**
